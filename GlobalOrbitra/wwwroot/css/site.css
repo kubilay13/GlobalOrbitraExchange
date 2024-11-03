@@ -962,6 +962,13 @@ address.footer-contact-link {
         --fs-2: 3.4rem;
     }
 
+    .trend-tab {
+        background-color: transparent;
+    }
+
+    .trend-card {
+        background-color: transparent;
+    }
 
 
     /**
