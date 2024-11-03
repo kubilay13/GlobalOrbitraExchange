@@ -17,7 +17,10 @@ namespace GlobalOrbitra.Controllers
         {
             return View();
         }
-
+        public IActionResult Errortest()
+        {
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();
