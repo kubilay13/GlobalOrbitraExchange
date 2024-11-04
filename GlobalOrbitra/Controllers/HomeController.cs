@@ -1,3 +1,4 @@
+using Binance.Net.Clients;
 using GlobalOrbitra.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -7,9 +8,10 @@ namespace GlobalOrbitra.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly BinanceSocketClient _binanceSocketClient;
+        public HomeController(ILogger<HomeController> logger, BinanceSocketClient binanceSocketClient)
         {
+            _binanceSocketClient = binanceSocketClient;
             _logger = logger;
         }
 

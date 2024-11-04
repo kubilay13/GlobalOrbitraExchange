@@ -1,8 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-   
-   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.6/signalr.min.js"></script>
+    <script src="~/js/Binance.js"></script>
     <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -154,12 +154,12 @@
                                         </a>
                                     </div>
 
-                                    <data class="card-value" value="46168.95">USD 46,168.95</data>
+                                <data id="BTCUSDT" class="card-value" value="46168.95"></data>
 
                                     <div class="card-analytics">
-                                        <data class="current-price" value="36641.20">36,641.20</data>
+                                        <data class="current-price" value="36641.20"></data>
 
-                                        <div class="badge red">-0.79%</div>
+                                    <div id="BTCUSDT-percentage" class=""></div>
                                     </div>
 
                                 </div>
@@ -176,12 +176,12 @@
                                         </a>
                                     </div>
 
-                                    <data class="card-value" value="3480.04">USD 3,480.04</data>
+                                <data id="ETHUSDT" class="card-value" value="3480.04">USD 3,480.04</data>
 
                                     <div class="card-analytics">
-                                        <data class="current-price" value="36641.20">36,641.20</data>
+                                        <data class="current-price" value="36641.20"></data>
 
-                                        <div class="badge green">+10.55%</div>
+                                    <div id="ETHUSDT-percentage" class=""></div>
                                     </div>
 
                                 </div>
@@ -191,17 +191,17 @@
                                 <div class="trend-card">
 
                                     <div class="card-title-wrapper">
-                                        <img src="/images/coin-3.svg" width="24" height="24" alt="tether logo">
+                                        <img src="/images/Orbitra.webp" width="24" height="24" alt="orbitra logo">
 
                                         <a href="#" class="card-title">
-                                            Tether <span class="span">USDT/USD</span>
+                                            Orbitra <span class="span">Orbitra/USD</span>
                                         </a>
                                     </div>
 
                                     <data class="card-value" value="1.00">USD 1.00</data>
 
                                     <div class="card-analytics">
-                                        <data class="current-price" value="36641.20">36,641.20</data>
+                                        <data  class="current-price" value="36641.20">36,641.20</data>
 
                                         <div class="badge red">-0.01%</div>
                                     </div>
@@ -220,12 +220,12 @@
                                         </a>
                                     </div>
 
-                                    <data class="card-value" value="443.56">USD 443.56</data>
+                                   <data id="BNBUSDT" class="card-value" value="443.56"></data>
 
                                     <div class="card-analytics">
-                                        <data class="current-price" value="36641.20">36,641.20</data>
+                                        <data class="current-price" value="36641.20"></data>
 
-                                        <div class="badge red">-1.24%</div>
+                                    <div id="BNBUSDT-percentage" class=""></div>
                                     </div>
 
                                 </div>
@@ -338,7 +338,7 @@
                                         </div>
                                     </td>
 
-                                    <td class="table-data last-price">$56,623.54</td>
+                                <td id="BTCUSDT" class="table-data last-price">$56,623.54</td>
 
                                     <td class="table-data last-update green">+1.45%</td>
 
@@ -375,7 +375,7 @@
                                         </div>
                                     </td>
 
-                                    <td class="table-data last-price">$56,623.54</td>
+                                <td class="table-data last-price">$56,623.54</td>
 
                                     <td class="table-data last-update red">-5.12%</td>
 
