@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    
 }
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.6/signalr.min.js"></script>
     <script src="~/js/Binance.js"></script>
@@ -7,6 +8,67 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+
+<style>
+  /* Modal (Pop-Up) Stil */
+.wallet-options {
+    display: none; /* Başlangıçta gizli */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #333;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    color: white;
+    z-index: 1000;
+    min-width: 300px; /* Genişlik */
+    text-align: center;
+}
+
+.wallet-options button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    color: white;
+    background-color: #444;
+    border: 1px solid #666;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.wallet-options button:hover {
+    background-color: #666;
+}
+
+/* Buton bağlantı durumu */
+.wallet-options button.connected {
+    background-color: #4CAF50;
+    color: white;
+    pointer-events: none; /* Bağlandıktan sonra tıklanamaz */
+    border: 1px solid #4CAF50;
+}
+
+/* Connect Wallet Butonu */
+#connectWallet {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #008CBA;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#connectWallet:hover {
+    background-color: #005f7f;
+}
+
+</style>
 
     <header class="header" data-header>
         <div class="container">
@@ -52,14 +114,19 @@
                 <span class="line line-3"></span>
             </button>
 
-            <a href="#" class="btn btn-outline">Wallet</a>
-
+        <a href="#" id="connectWallet" class="btn btn-outline">Connect Wallet</a>
+     
         </div>
     </header>
-
-
+<div class="wallet-options" id="walletOptions">
+    <h3>Select a Wallet</h3>
+    <button id="metamaskOption">Connect Metamask</button>
+    <button id="tronlinkOption">Connect TronLink</button>
+    <button id="closeOptions">Cancel</button>
+</div>
 
     <main>
+    <p id="walletAddress"></p>
         <article>
 
             <!--
@@ -176,7 +243,7 @@
                                         </a>
                                     </div>
 
-                                <data id="ETHUSDT" class="card-value" value="3480.04">USD 3,480.04</data>
+                                <data id="ETHUSDT" class="card-value" value="3480.04"></data>
 
                                     <div class="card-analytics">
                                         <data class="current-price" value="36641.20"></data>
@@ -778,7 +845,6 @@
                         </ul>
 
                         <a href="#" class="btn btn-primary">Explore More</a>
-
                     </div>
 
                 </div>
@@ -1021,7 +1087,7 @@
             <div class="container">
 
                 <p class="copyright">
-                    &copy; 2022 Cryptex All Rights Reserved by <a href="#" class="copyright-link">codewithsadee</a>
+                    &copy; 2024 Cryptex All Rights Reserved by <a href="#" class="copyright-link">GlobalOrbitra</a>
                 </p>
 
                 <ul class="social-list">
@@ -1057,5 +1123,76 @@
 
     </footer>
 
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<script>
+   const connectWalletBtn = document.getElementById('connectWallet');
+   const walletOptions = document.getElementById('walletOptions');
+   const closeOptionsBtn = document.getElementById('closeOptions');
+   const walletAddressDisplay = document.getElementById('walletAddress');
+   const metamaskBtn = document.getElementById('metamaskOption');
+   const tronlinkBtn = document.getElementById('tronlinkOption');
+
+   // Connect Wallet butonuna tıklanınca seçenekleri göster
+   connectWalletBtn.addEventListener('click', (e) => {
+       e.preventDefault();
+       walletOptions.style.display = 'block';  // Modal göster
+   });
+
+   // Seçenekleri kapat
+   closeOptionsBtn.addEventListener('click', () => {
+       walletOptions.style.display = 'none';
+   });
+
+   // Metamask Bağlantısı
+   metamaskBtn.addEventListener('click', async () => {
+       if (typeof window.ethereum !== 'undefined') {
+           try {
+               const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+               walletAddressDisplay.textContent = `Metamask Wallet: ${accounts[0]}`;
+               metamaskBtn.classList.add('connected');
+               metamaskBtn.innerHTML = "Metamask Connected ✅";
+           } catch (error) {
+               console.error('Metamask bağlanırken hata oluştu:', error);
+               alert('Metamask bağlama işlemi iptal edildi.');
+           }
+       } else {
+           alert('Metamask yüklü değil. Lütfen tarayıcınıza Metamask yükleyin.');
+       }
+       walletOptions.style.display = 'none';
+   });
+
+   // TronLink Bağlantısı
+   tronlinkBtn.addEventListener('click', async () => {
+       if (typeof window.tronLink !== 'undefined' && typeof window.tronWeb !== 'undefined') {
+           try {
+               console.log('TronLink yüklü ve tronWeb mevcut');
+               const tronWeb = window.tronWeb;
+               console.log('tronWeb objesi:', tronWeb);  // tronWeb objesini kontrol et
+
+               // TronWeb objesi mevcutsa ve adres doğruysa
+               if (tronWeb && tronWeb.defaultAddress && tronWeb.defaultAddress.base58) {
+                   // Ağın doğru olduğundan emin ol
+                   if (tronWeb.fullNode.host === 'https://api.trongrid.io') { // Mainnet kontrolü
+                       const walletAddress = tronWeb.defaultAddress.base58;
+                       walletAddressDisplay.textContent = `TronLink Wallet: ${walletAddress}`;
+                       tronlinkBtn.classList.add('connected');
+                       tronlinkBtn.innerHTML = "TronLink Connected ✅";
+                   } else {
+                       alert('Lütfen Tron ana ağını seçin. Şu anda yan ağ kullanıyorsunuz.');
+                   }
+               } else {
+                   alert('TronLink cüzdanınızda oturum açılmamış. Lütfen TronLink cüzdanını açın ve oturum açın.');
+               }
+           } catch (error) {
+               console.error('TronLink bağlanırken hata oluştu:', error);
+               alert('TronLink bağlama işlemi sırasında hata oluştu. Lütfen tekrar deneyin.');
+           }
+       } else {
+           alert('TronLink cüzdanı yüklü değil. Lütfen tarayıcınıza TronLink yükleyin.');
+       }
+       walletOptions.style.display = 'none'; // Wallet seçeneklerini gizle
+   });
+</script>
+
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>

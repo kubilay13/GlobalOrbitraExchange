@@ -28,7 +28,7 @@ priceUpdateConnection.on("ReceivePriceUpdate", function (symbol, price, color, p
         priceElement.style.color = color; // Renk güncellemesi
 
 
-        priceElement.innerText = `USD: ${price}`;
+        priceElement.innerText = `USDT: ${price}`;
         // Fiyatı güncelle
 
 
