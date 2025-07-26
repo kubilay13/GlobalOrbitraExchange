@@ -1,0 +1,56 @@
+﻿/* Modal (Pop-Up) Stil */
+.wallet-options {
+    display: none; /* Başlangıçta gizli */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #333;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    color: white;
+    z-index: 1000;
+    min-width: 300px; /* Genişlik */
+    text-align: center;
+}
+
+ .wallet-options button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    color: white;
+    background-color: #444;
+    border: 1px solid #666;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.wallet-options button:hover {
+    background-color: #666;
+}
+
+ /* Buton bağlantı durumu */
+ .wallet-options button.connected {
+    background-color: #4CAF50;
+    color: white;
+    pointer-events: none; /* Bağlandıktan sonra tıklanamaz */
+    border: 1px solid #4CAF50;
+}
+
+/* Connect Wallet Butonu */
+#connectWallet {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #008CBA;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+ #connectWallet:hover {
+   background-color: #005f7f;
+}

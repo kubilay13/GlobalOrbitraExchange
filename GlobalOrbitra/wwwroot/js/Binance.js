@@ -1,62 +1,54 @@
-﻿// SignalR bağlantısını oluşturun
-const priceUpdateConnection = new signalR.HubConnectionBuilder()
-    .withUrl("https://localhost:7016/priceUpdateHub") // Hub'ın URL'si
+﻿const priceUpdateConnection = new signalR.HubConnectionBuilder()
+    .withUrl("https://localhost:7016/priceUpdateHub")
     .build();
 
-// Fiyatların en son ve 24 saat önceki değerlerini saklamak için nesneler oluşturun
 const lastPrices = {};
-const last24hPrices = {};
 
-// Bağlantı kurulduğunda fiyat güncellemelerini dinleyin
 priceUpdateConnection.on("ReceivePriceUpdate", function (symbol, price, color, priceChangePercentage) {
-    console.log(`Güncellenen Fiyat: ${symbol} - ${price}`);
+    const priceElement = document.getElementById(symbol);
+    const percentageElement = document.getElementById(`${symbol}-percentage`);
 
-    // Her coinin kendi elementi ile güncelleme
-    let elementId = symbol;
-    const priceElement = document.getElementById(elementId);
+    const newPrice = parseFloat(price);
+    const oldPrice = lastPrices[symbol] ?? newPrice;
+    lastPrices[symbol] = newPrice;
 
+    // 🔼 Karttaki fiyat güncelleme
     if (priceElement) {
-        // Önceki fiyatı kontrol edin
-        const lastPrice = lastPrices[symbol];
+        priceElement.innerText = newPrice.toLocaleString('en-US', { minimumFractionDigits: 2 });
 
-        // Eğer 24 saat önceki fiyat yoksa mevcut fiyatı kaydedin
-        if (!last24hPrices[symbol]) {
-            last24hPrices[symbol] = price; // 24 saat önceki fiyatı kaydedin
+        if (newPrice > oldPrice) {
+            priceElement.style.color = "#6fcf97"; // yeşil
+        } else if (newPrice < oldPrice) {
+            priceElement.style.color = "#eb5757"; // kırmızı
         }
 
-        // Renk değiştirme koşulu (renk parametresini kullanın)
-        priceElement.style.color = color; // Renk güncellemesi
+        priceElement.style.fontWeight = "600";
+        priceElement.style.fontSize = "20px";
+    }
 
+    // 🔼 Karttaki badge güncelleme
+    if (percentageElement) {
+        const sign = priceChangePercentage > 0 ? "+" : "";
+        const icon =
+            priceChangePercentage > 0
+                ? '<i class="fas fa-caret-up"></i>'
+                : priceChangePercentage < 0
+                    ? '<i class="fas fa-caret-down"></i>'
+                    : '';
 
-        priceElement.innerText = `USDT: ${price}`;
-        // Fiyatı güncelle
+        percentageElement.innerHTML = `${sign}${priceChangePercentage.toFixed(2)}% ${icon}`;
+        percentageElement.className = `badge ${priceChangePercentage >= 0 ? "green" : "red"}`;
+    }
 
+    // 🔼 Tablodaki yüzde hücresi güncelleme (data-symbol ile)
+    const tableCell = document.querySelector(`.last-update[data-symbol="${symbol}"]`);
+    if (tableCell) {
+        const sign = priceChangePercentage > 0 ? "+" : "";
+        tableCell.innerText = `${sign}${priceChangePercentage.toFixed(2)}%`;
 
-        // Son fiyatı kaydet
-        lastPrices[symbol] = price;
-
-        // Yüzde değişimi hesapla ve göster
-        const percentageElement = document.getElementById(`${symbol}-percentage`);
-        if (percentageElement) {
-            // 24 saatlik değişimi göster
-            percentageElement.innerText = `24 HOURS: ${priceChangePercentage.toFixed(2)}% `;
-
-            // Yüzde değişimine göre renk ayarla
-            percentageElement.style.color = priceChangePercentage < 0 ? 'red' : 'green'; // Negatif değişim kırmızı, pozitif yeşil
-
-            // Borsa ok simgelerini ekle
-            if (priceChangePercentage > 0) {
-                percentageElement.innerHTML += ' <i class="fas fa-caret-up"></i>'; // Yukarı ok simgesi
-            } else if (priceChangePercentage < 0) {
-                percentageElement.innerHTML += ' <i class="fas fa-caret-down"></i>'; // Aşağı ok simgesi
-            } else {
-                percentageElement.innerHTML += ''; // Hiçbir değişim yoksa boş bırak
-            }
-        }
+        tableCell.classList.remove("green", "red");
+        tableCell.classList.add(priceChangePercentage >= 0 ? "green" : "red");
     }
 });
 
-// Bağlantıyı başlat
-priceUpdateConnection.start().catch(function (err) {
-    return console.error(err.toString());
-});
+priceUpdateConnection.start().catch(err => console.error(err.toString()));
