@@ -478,7 +478,9 @@ body {
 .trend {
     background-color: var(--eerie-black-1);
     padding-block-end: 0;
+
 }
+
 
 .trend-tab {
     background-color: var(--eerie-black-2);
@@ -487,6 +489,7 @@ body {
     padding: 20px;
     box-shadow: var(--shadow-2);
     margin-block-start: -160px;
+    box-shadow: 0 2px 4px hsla(0, 0%, 0%, 0.1), 1px 2px 3px hsl(220, 5%, 20%);
 }
 
     .trend-tab .tab-nav {
@@ -495,6 +498,7 @@ body {
         padding-block-end: 20px;
         margin-block-end: 20px;
         border-block-end: 1px solid var(--raisin-black);
+      
     }
 
     .trend-tab .tab-btn {
@@ -577,6 +581,7 @@ body {
 .market {
     background-color: var(--eerie-black-1);
     color: var(--white);
+    box-shadow: 0 1px 3px rgba(42, 42, 45, 1);
 }
 
     .market .title-wrapper {
