@@ -2,48 +2,268 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-   @*  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> *@
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
     <title>@ViewData["Title"] - GlobalOrbitra</title>
-   @*  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
+   @*  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />  *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/GlobalOrbitra.styles.css" asp-append-version="true" />
+    <link href="~/css/walletconnection.css" rel="stylesheet" />
 </head>
 <body>
-  @*   <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GlobalOrbitra</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header> *@
+    <header class="header" data-header>
+        <div class="container">
+
+            <a href="#" class="logo">
+                <img src="/images/logo.svg" width="32" height="32" alt="Cryptex logo">
+                Cryptex
+            </a>
+
+            <nav class="navbar" data-navbar>
+                <ul class="navbar-list">
+
+                    <li class="navbar-item">
+                        <a href="#" class="navbar-link active" data-nav-link>Homepage</a>
+                    </li>
+
+                    <li class="navbar-item">
+                        <a href="#" class="navbar-link" data-nav-link>Buy Crypto</a>
+                    </li>
+
+                    <li class="navbar-item">
+                        <a href="#" class="navbar-link" data-nav-link>Markets</a>
+                    </li>
+
+                    <li class="navbar-item">
+                        <a href="#" class="navbar-link" data-nav-link>Sell Crypto</a>
+                    </li>
+
+                    <li class="navbar-item">
+                        <a href="#" class="navbar-link" data-nav-link>Blog</a>
+                    </li>
+
+                    <li class="navbar-item">
+                        <a href="#" class="navbar-link" data-nav-link>BITUSDT</a>
+                    </li>
+
+                </ul>
+            </nav>
+
+            <button class="nav-toggle-btn" aria-label="Toggle menu" data-nav-toggler>
+                <span class="line line-1"></span>
+                <span class="line line-2"></span>
+                <span class="line line-3"></span>
+            </button>
+
+            <a href="#" id="connectWallet" class="btn btn-outline">Connect Anonim Wallet</a>
+          
+        </div>
+    </header>
+    <div class="wallet-options" id="walletOptions">
+        <h3>Select a Wallet</h3>
+        <button id="metamaskOption">Connect Metamask</button>
+        <button id="tronlinkOption">Connect TronLink</button>
+        <button id="closeOptions">Cancel</button>
+    </div>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-   @*  <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - GlobalOrbitra - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <!--
+       - #FOOTER
+     -->
+
+    <footer class="footer">
+
+        <div class="footer-top" data-section>
+            <div class="container">
+
+                <div class="footer-brand">
+
+                    <a href="#" class="logo">
+                        <img src="/images/logo.svg" width="50" height="50" alt="Cryptex logo">
+                        Cryptex
+                    </a>
+
+                    <h2 class="footer-title">Let's talk! 🤙</h2>
+
+                    <a href="tel:+123456789101" class="footer-contact-link">+12 345 678 9101</a>
+
+                    <a href="mailto:hello.cryptex@gmail.com" class="footer-contact-link">hello.cryptex@gmail.com</a>
+
+                    <address class="footer-contact-link">
+                        Cecilia Chapman 711-2880 Nulla St. Mankato Mississippi 96522
+                    </address>
+
+                </div>
+
+                <ul class="footer-list">
+
+                    <li>
+                        <p class="footer-list-title">Products</p>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Spot</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Inverse Perpetual</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">USDT Perpetual</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Exchange</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Launchpad</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Binance Pay</a>
+                    </li>
+
+                </ul>
+
+                <ul class="footer-list">
+
+                    <li>
+                        <p class="footer-list-title">Services</p>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Buy Crypto</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Markets</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Tranding Fee</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Affiliate Program</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Referral Program</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">API</a>
+                    </li>
+
+                </ul>
+
+                <ul class="footer-list">
+
+                    <li>
+                        <p class="footer-list-title">Support</p>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Bybit Learn</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Help Center</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">User Feedback</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Submit a request</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">API Documentation</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Trading Rules</a>
+                    </li>
+
+                </ul>
+
+                <ul class="footer-list">
+
+                    <li>
+                        <p class="footer-list-title">About Us</p>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">About Bybit</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Authenticity Check</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Careers</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Business Contacts</a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="footer-link">Blog</a>
+                    </li>
+
+                </ul>
+
+            </div>
         </div>
-    </footer> *@
-    @* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
-    @* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
+
+        <div class="footer-bottom">
+            <div class="container">
+
+                <p class="copyright">
+                    &copy; 2024 Cryptex All Rights Reserved by <a href="#" class="copyright-link">GlobalOrbitra</a>
+                </p>
+
+                <ul class="social-list">
+
+                    <li>
+                        <a href="#" class="social-link">
+                            <ion-icon name="logo-facebook"></ion-icon>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="social-link">
+                            <ion-icon name="logo-twitter"></ion-icon>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="social-link">
+                            <ion-icon name="logo-instagram"></ion-icon>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="social-link">
+                            <ion-icon name="logo-linkedin"></ion-icon>
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+
+    </footer>
     <script src="~/js/site.js" asp-append-version="true"></script>
-   @*  @await RenderSectionAsync("Scripts", required: false) *@
+ 
 </body>
 </html>

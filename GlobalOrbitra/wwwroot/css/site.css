@@ -523,6 +523,7 @@ body {
     padding: 20px;
     border-radius: var(--radius-12);
     transition: var(--transition-1);
+    cursor: pointer;
 }
 
     .trend-card:is(:hover, .active) {
@@ -673,6 +674,7 @@ body {
 
 .table-row:not(.table-title) {
     height: 90px;
+    cursor: pointer;
 }
 
 .market-table .table-row {
