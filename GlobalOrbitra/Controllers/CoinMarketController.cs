@@ -4,8 +4,10 @@ namespace GlobalOrbitra.Controllers
 {
     public class CoinMarketController : Controller
     {
-        public IActionResult CoinMarket()
+        [HttpGet]
+        public IActionResult CoinMarket(string symbol)
         {
+            ViewBag.Symbol = symbol; // View'e geçiriyoruz
             return View();
         }
     }

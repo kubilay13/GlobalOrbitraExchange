@@ -27,9 +27,9 @@ namespace GlobalOrbitra.Services
         private List<string> _allCoins = new List<string>
         {
             "BTCUSDT", "ETHUSDT", "BNBUSDT", "TRXUSDT",
-            "SOLUSDT", "LTCUSDT", "LTCUSDT", "ARBUSDT",
+            "SOLUSDT", "LTCUSDT", "ARBUSDT","USDCUSDT",
             "XRPUSDT", "BCHUSDT","SUIUSDT","ADAUSDT",
-            "USDCUSDT","AVAXUSDT"
+            "AVAXUSDT"
         };
 
         public async Task SubscribeToPriceUpdatesAsync()

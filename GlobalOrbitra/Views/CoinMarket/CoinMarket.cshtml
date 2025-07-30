@@ -1,12 +1,14 @@
-﻿
+﻿<link href="~/css/coinmarket.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.7/signalr.min.js"></script>
 
-<link href="~/css/coinmarket.css" rel="stylesheet" />
+
 <div class="container" style="margin-top: 100px; z-index: 1000; position: relative;">
     <div class="marketbox">
-        <img src="~/images/bitcoin-cash-bch-logo.svg" width="24" height="24" alt="Coin Market png" />
-        <h3>BCHUSDT</h3>
-        <h3>Amount</h3>
-        <h3>24HOURS</h3>
+        <img id="coin-logo" class="coin-logo" src="" width="36" height="36" alt="Coin Market png" />
+        <h3 id="coin-name" class="coin-name"></h3>
+        <h3><span id="price" class="price"></span></h3>
+        <h3><span id="price-percentage" class="percentage"></span></h3>
     </div>
-    
 </div>
+
+<script src="~/js/popularmarketcoinprices.js"></script>
