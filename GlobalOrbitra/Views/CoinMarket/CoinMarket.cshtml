@@ -1,7 +1,5 @@
 ﻿<link href="~/css/coinmarket.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.7/signalr.min.js"></script>
-
-
 <div class="container" style="margin-top: 100px; z-index: 1000; position: relative;">
     <div class="marketbox">
         <img id="coin-logo" class="coin-logo" src="" width="36" height="36" alt="Coin Market png" />
@@ -9,6 +7,45 @@
         <h3><span id="price" class="price"></span></h3>
         <h3><span id="price-percentage" class="percentage"></span></h3>
     </div>
-</div>
 
-<script src="~/js/popularmarketcoinprices.js"></script>
+    <div class="tradingview-widget-container" style="margin-top: 30px;">
+        <div id="tradingview_chart"></div>
+    </div>
+
+
+</div>
+<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.7/signalr.min.js"></script>
+
+<script>
+    window.onload = function () {
+      // TradingView Ayarı
+      const params = new URLSearchParams(window.location.search);
+      const symbol = params.get("symbol")?.toUpperCase() || "BTCUSDT";
+      const tradingviewSymbol = "BINANCE:" + symbol;
+
+       new TradingView.widget({
+      "width": "55%",
+      "height": 400,
+      "symbol": tradingviewSymbol,
+      "interval": "30",
+      "timezone": "Etc/UTC",
+      "theme": "dark",
+      "style": "1",
+      "locale": "tr",
+      "toolbar_bg": "#1e1e1e",
+      "enable_publishing": false,
+      "allow_symbol_change": false,
+      "container_id": "tradingview_chart"
+    });
+
+
+      // popularmarketcoinprices.js içeriği buraya gömülmüş gibi çalışsın istiyorsan, çağır:
+      const script = document.createElement('script');
+      script.src = '/js/popularmarketcoinprices.js';  // Yol doğruysa
+      document.body.appendChild(script);
+    }
+</script>
+
+
+
