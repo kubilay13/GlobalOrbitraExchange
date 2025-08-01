@@ -10,5 +10,9 @@ namespace GlobalOrbitra.Controllers
             ViewBag.Symbol = symbol; // View'e geçiriyoruz
             return View();
         }
+        public IActionResult AllCryptoMarket()
+        {
+            return View();
+        }
     }
 }
