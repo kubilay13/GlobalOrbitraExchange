@@ -1,0 +1,116 @@
+﻿body {
+    padding-top: 100px;
+    margin: 0;
+    background-color: #0D0D0D;
+    color: white;
+    font-family: sans-serif;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.overview-box {
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    border-radius: 6px;
+    padding: 20px;
+    background-color: #131315;
+    margin-top: 20px;
+    display:flex;
+}
+
+.overview-menu {
+    flex: 1 1 200px;
+    min-width: 180px;
+    max-width: 300px;
+    background-color: #1A1A1D;
+    border: 0.01px solid #3874FF;
+    border-radius: 5px;
+    color: #3874FF;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 10px;
+    justify-content: center;
+    align-items:center;
+}
+.coin-table {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 10px;
+    min-width: 0;
+}
+.market-table-container {
+    margin: 30px auto;
+    background-color: #131315;
+    border: 1px solid #3874FF;
+    border-radius: 6px;
+    overflow-x: auto;
+}
+
+table.market-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: white;
+    font-family: sans-serif;
+    min-width: 800px;
+}
+
+table.market-table th,
+table.market-table td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #2b2b2f;
+}
+
+table.market-table th {
+    background-color: #1A1A1D;
+    color: #3874FF;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+table.market-table td img {
+     width: 24px;
+     vertical-align: middle;
+     margin-right: 10px;
+}
+
+.price-positive {
+    color: #00c853;
+}
+
+.price-negative {
+    color: #ff5252;
+}
+
+.coin-name {
+    display: flex;
+    align-items: center;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+    gap: 10px;
+}
+
+.pagination button {
+    background: #1A1A1D;
+    border: 1px solid #3874FF;
+    color: #3874FF;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination button:hover {
+     background-color: #3874FF;
+     color: white;
+}
