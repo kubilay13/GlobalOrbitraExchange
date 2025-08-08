@@ -1,4 +1,7 @@
-﻿<link href="~/css/dashboard.css" rel="stylesheet" />
+﻿<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.6/signalr.min.js"></script>
+<script src="~/js/binance.js"></script>
+<link href="~/css/dashboard.css" rel="stylesheet" />
+
 <body>
     <div class="dashboard">
         <div>
@@ -62,18 +65,20 @@
                 <h2>Canlı Fiyatlar</h2>
                 <div class="asset">
                     <span>BTC/USDT</span>
-                    <span>$29,450</span>
+                    <span id="BTCUSDT"></span>
                 </div>
                 <div class="asset">
                     <span>ETH/USDT</span>
-                    <span>$1,850</span>
+                    <span id="ETHUSDT"></span>
                 </div>
                 <div class="asset">
                     <span>BNB/USDT</span>
-                    <span>$240</span>
+                    <span id="BNBUSDT"></span>
                 </div>
             </div>
         </div>
+
     </div>
 
 </body>
+<script src="~/js/binance.js"></script>

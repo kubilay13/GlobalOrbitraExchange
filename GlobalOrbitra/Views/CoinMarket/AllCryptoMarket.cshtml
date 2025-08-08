@@ -1,24 +1,25 @@
 ﻿<link href="~/css/marketdesign.css" rel="stylesheet" />
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.6/signalr.min.js"></script>
+<script src="~/js/binance.js"></script>
 <div class="container">
     <div class="overview-box">
         <div class="overview-menu">
             <div class="coin-table">
                  <img src="~/images/btc.svg" width="24" height="24"/>
                  <p>BTC</p>
-                 <p>Price</p>
+                 <p id="" class="p"></p>
                  <p>24Hours</p>
             </div>
             <div class="coin-table">
-                <img src="~/images/btc.svg" width="24" height="24" />
-                <p>BTC</p>
-                <p>Price</p>
+                <img src="~/images/ETH.svg" width="24" height="24" />
+                <p>ETH</p>
+                <p id=""></p>
                 <p>24Hours</p>
             </div>
             <div class="coin-table">
-                <img src="~/images/btc.svg" width="24" height="24" />
-                <p>BTC</p>
-                <p>Price</p>
+                <img src="~/images/BNB.svg" width="24" height="24" />
+                <p>BNB</p>
+                <p id=""></p>
                 <p>24Hours</p>
             </div>
         </div>
@@ -92,23 +93,20 @@
                     <th>Fiyat</th>
                     <th>Değişim</th>
                     <th>Hacim</th>
-                    <th>Piyasa Değeri</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td class="coin-name"><img src="/images/btc.svg" alt="BTC" /> Bitcoin (BTC)</td>
-                    <td>$57,230.54</td>
+                    <td id="BTCUSDT"></td>
                     <td class="price-positive">+1.45%</td>
                     <td>$23.1B</td>
-                    <td>$1.12T</td>
                 </tr>
                 <tr>
                     <td class="coin-name"><img src="/images/eth.svg" alt="ETH" /> Ethereum (ETH)</td>
-                    <td>$3,120.99</td>
+                    <td id="ETHUSDT"></td>
                     <td class="price-negative">-0.82%</td>
                     <td>$12.7B</td>
-                    <td>$580B</td>
                 </tr>
             </tbody>
         </table>

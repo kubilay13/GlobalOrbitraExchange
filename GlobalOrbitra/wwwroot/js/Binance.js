@@ -22,8 +22,8 @@ priceUpdateConnection.on("ReceivePriceUpdate", function (symbol, price, color, p
             priceElement.style.color = "#eb5757"; // kırmızı
         }
 
-        priceElement.style.fontWeight = "600";
-        priceElement.style.fontSize = "20px";
+        // font-size küçült (important ile)
+        priceElement.style.setProperty('font-size', '14px', 'important');
     }
 
     // 🔼 Karttaki badge güncelleme
@@ -38,6 +38,9 @@ priceUpdateConnection.on("ReceivePriceUpdate", function (symbol, price, color, p
 
         percentageElement.innerHTML = `${sign}${priceChangePercentage.toFixed(2)}% ${icon}`;
         percentageElement.className = `badge ${priceChangePercentage >= 0 ? "green" : "red"}`;
+
+        // font-size küçült (important ile)
+        percentageElement.style.setProperty('font-size', '12px', 'important');
     }
 
     // 🔼 Tablodaki yüzde hücresi güncelleme (data-symbol ile)
@@ -48,7 +51,11 @@ priceUpdateConnection.on("ReceivePriceUpdate", function (symbol, price, color, p
 
         tableCell.classList.remove("green", "red");
         tableCell.classList.add(priceChangePercentage >= 0 ? "green" : "red");
+
+        // font-size küçült (important ile)
+        tableCell.style.setProperty('font-size', '12px', 'important');
     }
 });
+
 
 priceUpdateConnection.start().catch(err => console.error(err.toString()));

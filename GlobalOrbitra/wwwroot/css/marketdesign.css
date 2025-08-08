@@ -114,3 +114,8 @@ table.market-table td img {
      background-color: #3874FF;
      color: white;
 }
+.coin-table .p {
+    margin: 0;
+    font-weight: 500;
+    line-height: 1;
+}
