@@ -1,6 +1,7 @@
 using Binance.Net.Clients;
 using BlockChainAI;
 using GlobalOrbitra.Services;
+using GlobalOrbitra.Services.WalletService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,11 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<BinanceServices>();
 builder.Services.AddSingleton<BinanceSocketClient>();
 builder.Services.AddSingleton<BinanceRestClient>();
+
+builder.Services.AddScoped<TronWalletService>();
+builder.Services.AddScoped<EthWalletService>();
+builder.Services.AddScoped<BscWalletService>();
+builder.Services.AddScoped<SolWalletService>();
 
 builder.Services.AddSignalR();
 
