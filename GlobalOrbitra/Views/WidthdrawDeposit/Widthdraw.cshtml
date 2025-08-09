@@ -1,0 +1,41 @@
+﻿<link href="~/css/widthdraw.css" rel="stylesheet" />
+<div class="withdraw-container">
+    <h2>Withdraw</h2>
+
+    <div class="dropdown">
+        <button class="dropdown-btn">Select Coin <span class="arrow">&#9662;</span></button>
+        <div class="dropdown-content">
+            @foreach (var asset in Model)
+            {
+                <div class="dropdown-item">
+                    <img src="@asset.ImageUrl" alt="@asset.Symbol" />
+                    <span>@asset.Name (@asset.Symbol)</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const btn = document.querySelector(".dropdown-btn");
+        const content = document.querySelector(".dropdown-content");
+
+        btn.addEventListener("click", function () {
+            content.style.display = content.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!btn.contains(event.target) && !content.contains(event.target)) {
+                content.style.display = "none";
+            }
+        });
+
+        document.querySelectorAll(".dropdown-item").forEach(item => {
+            item.addEventListener("click", function () {
+                btn.innerHTML = this.innerHTML + '<span class="arrow">&#9662;</span>';
+                content.style.display = "none";
+            });
+        });
+    });
+
+</script>
