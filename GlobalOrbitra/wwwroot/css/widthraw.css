@@ -1,8 +1,13 @@
-﻿.withdraw-container {
-    max-width: 500px;
+﻿body {
+    padding-top: 70px; /* içerik header'a çarpmaz */
+}
+
+.withdraw-container {
+    width: 400px;
     margin: 50px auto;
     font-family: Arial, sans-serif;
-    border: 1px solid #3874FF;
+    color: white;
+    border: solid 1px #3874FF;
     padding: 20px;
     border-radius: 8px;
 }
@@ -10,6 +15,7 @@
 .dropdown {
     position: relative;
     width: 100%;
+    margin-bottom: 15px;
 }
 
 .dropdown-btn {
@@ -54,4 +60,29 @@
     height: 24px;
     margin-right: 10px;
     border-radius: 50%;
+ }
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    background: #1e1e1e;
+    border: 1px solid #444;
+    color: white;
+}
+
+.fee-info {
+    margin-top: 10px;
+    background: #2b2b2b;
+    padding: 8px;
+    border-radius: 4px;
 }

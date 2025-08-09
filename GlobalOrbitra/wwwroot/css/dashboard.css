@@ -68,17 +68,17 @@ th {
 .badge {
     font-weight: 600;
     margin-left: 8px;
-    font-size: 9px;
+    font-size: 15px;
 }
 
 .green {
     color: #6fcf97;
-    font-size: 9px;
+    font-size: 15px;
 }
 
 .red {
     color: #eb5757;
-    font-size: 9px;
+    font-size: 15px;
 }
 
 @media (max-width: 768px) {

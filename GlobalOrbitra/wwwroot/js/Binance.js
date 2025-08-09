@@ -23,7 +23,7 @@ priceUpdateConnection.on("ReceivePriceUpdate", function (symbol, price, color, p
         }
 
         // font-size küçült (important ile)
-        priceElement.style.setProperty('font-size', '14px', 'important');
+        priceElement.style.setProperty('font-size', '17px', 'important');
     }
 
     // 🔼 Karttaki badge güncelleme
@@ -40,7 +40,7 @@ priceUpdateConnection.on("ReceivePriceUpdate", function (symbol, price, color, p
         percentageElement.className = `badge ${priceChangePercentage >= 0 ? "green" : "red"}`;
 
         // font-size küçült (important ile)
-        percentageElement.style.setProperty('font-size', '12px', 'important');
+        percentageElement.style.setProperty('font-size', '17px', 'important');
     }
 
     // 🔼 Tablodaki yüzde hücresi güncelleme (data-symbol ile)
@@ -53,7 +53,7 @@ priceUpdateConnection.on("ReceivePriceUpdate", function (symbol, price, color, p
         tableCell.classList.add(priceChangePercentage >= 0 ? "green" : "red");
 
         // font-size küçült (important ile)
-        tableCell.style.setProperty('font-size', '12px', 'important');
+        tableCell.style.setProperty('font-size', '17px', 'important');
     }
 });
 

@@ -1,24 +1,50 @@
-﻿<link href="~/css/widthdraw.css" rel="stylesheet" />
+﻿<link href="~/css/widthraw.css" rel="stylesheet" />
 <div class="withdraw-container">
     <h2>Withdraw</h2>
 
+    <!-- Coin Seçimi -->
     <div class="dropdown">
         <button class="dropdown-btn">Select Coin <span class="arrow">&#9662;</span></button>
         <div class="dropdown-content">
             @foreach (var asset in Model)
             {
-                <div class="dropdown-item">
+                <div class="dropdown-item" data-symbol="@asset.Symbol">
                     <img src="@asset.ImageUrl" alt="@asset.Symbol" />
                     <span>@asset.Name (@asset.Symbol)</span>
                 </div>
             }
         </div>
     </div>
+
+    <!-- Adres girişi -->
+    <div class="form-group">
+        <label for="withdraw-address">Withdrawal Address</label>
+        <input type="text" id="withdraw-address" placeholder="Enter recipient address" />
+    </div>
+
+    <!-- Ağ seçimi -->
+    <div class="form-group">
+        <label for="network-select">Network</label>
+        <select id="network-select">
+            <option value="">Select network</option>
+            <option value="ERC20">Ethereum (ERC20)</option>
+            <option value="TRC20">Tron (TRC20)</option>
+            <option value="BEP20">BNB Smart Chain (BEP20)</option>
+        </select>
+    </div>
+
+    <!-- Komisyon -->
+    <div class="fee-info">
+        <strong>Fee:</strong> <span id="withdraw-fee">0.00</span> <span id="selected-symbol"></span>
+    </div>
 </div>
+
 <script>
-        document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
         const btn = document.querySelector(".dropdown-btn");
         const content = document.querySelector(".dropdown-content");
+        const feeSpan = document.getElementById("withdraw-fee");
+        const symbolSpan = document.getElementById("selected-symbol");
 
         btn.addEventListener("click", function () {
             content.style.display = content.style.display === "block" ? "none" : "block";
@@ -34,8 +60,17 @@
             item.addEventListener("click", function () {
                 btn.innerHTML = this.innerHTML + '<span class="arrow">&#9662;</span>';
                 content.style.display = "none";
+
+                // Coin sembolünü fee kısmına ekle
+                const symbol = this.getAttribute("data-symbol");
+                symbolSpan.innerText = symbol;
+
+                // Örnek: sabit komisyon
+                if (symbol === "BTC") feeSpan.innerText = "0.0005";
+                else if (symbol === "ETH") feeSpan.innerText = "0.005";
+                else if (symbol === "USDT") feeSpan.innerText = "1";
+                else feeSpan.innerText = "0.00";
             });
         });
     });
-
 </script>
