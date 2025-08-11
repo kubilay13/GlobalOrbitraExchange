@@ -8,13 +8,26 @@ namespace GlobalOrbitra.Controllers
         public IActionResult Widthdraw()
         {
             var assets = new List<Asset>
+            {
+                new Asset { Symbol = "BTC", Name = "Bitcoin", ImageUrl = "/images/btc.png" },
+                new Asset { Symbol = "ETH", Name = "Ethereum", ImageUrl = "/images/eth.png" },
+                new Asset { Symbol = "USDT", Name = "Tether", ImageUrl = "/images/usdt.png" }
+            };
+
+               return View(assets);
+        }
+
+        public IActionResult Deposit()
         {
-            new Asset { Symbol = "BTC", Name = "Bitcoin", ImageUrl = "/images/btc.png" },
-            new Asset { Symbol = "ETH", Name = "Ethereum", ImageUrl = "/images/eth.png" },
-            new Asset { Symbol = "USDT", Name = "Tether", ImageUrl = "/images/usdt.png" }
-        };
+            var assets = new List<Asset>
+            {
+                new Asset { Symbol = "BTC", Name = "Bitcoin", ImageUrl = "/images/btc.png" },
+                new Asset { Symbol = "ETH", Name = "Ethereum", ImageUrl = "/images/eth.png" },
+                new Asset { Symbol = "USDT", Name = "Tether", ImageUrl = "/images/usdt.png" }
+            };
 
             return View(assets);
         }
+
     }
 }

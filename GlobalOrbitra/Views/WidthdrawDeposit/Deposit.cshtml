@@ -1,0 +1,191 @@
+﻿
+<style>
+    body {
+        padding-top: 70px;
+    }
+
+    .deposit-container {
+        width: 400px;
+        margin: 50px auto;
+        font-family: Arial, sans-serif;
+        color: white;
+        border: solid 1px #3874FF;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .dropdown {
+        position: relative;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .dropdown-btn {
+        width: 100%;
+        padding: 10px 15px;
+        background: #1e1e1e;
+        color: white;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        font-size: 16px;
+    }
+
+    .arrow {
+        float: right;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        width: 100%;
+        background: #2b2b2b;
+        border: 1px solid #444;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 99;
+    }
+
+    .dropdown-item {
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+        .dropdown-item:hover {
+            background: #3b3b3b;
+        }
+
+        .dropdown-item img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            background: #1e1e1e;
+            border: 1px solid #444;
+            color: white;
+        }
+
+    .address-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #2b2b2b;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+        .address-box button {
+            background: #3874FF;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+    .qr-box {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+</style>
+
+<div class="deposit-container">
+    <h2>Deposit</h2>
+
+    <!-- Coin Seçimi -->
+    <div class="dropdown">
+        <button class="dropdown-btn">Select Coin <span class="arrow">&#9662;</span></button>
+        <div class="dropdown-content">
+            @foreach (var asset in Model)
+            {
+                <div class="dropdown-item" data-symbol="@asset.Symbol">
+                    <img src="@asset.ImageUrl" alt="@asset.Symbol" />
+                    <span>@asset.Name (@asset.Symbol)</span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Network seçimi -->
+    <div class="form-group">
+        <label for="network-select">Network</label>
+        <select id="network-select">
+            <option value="">Select network</option>
+            <option value="ERC20">Ethereum (ERC20)</option>
+            <option value="TRC20">Tron (TRC20)</option>
+            <option value="BEP20">BNB Smart Chain (BEP20)</option>
+        </select>
+    </div>
+
+    <!-- Deposit Adresi -->
+    <div class="form-group">
+        <label>Deposit Address</label>
+        <div class="address-box">
+            <span id="deposit-address">Please select a coin</span>
+            <button id="copy-address">Copy</button>
+        </div>
+    </div>
+
+    <!-- QR Kod -->
+    <div class="qr-box" id="qr-box">
+        <!-- QR code dynamically here -->
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const btn = document.querySelector(".dropdown-btn");
+        const content = document.querySelector(".dropdown-content");
+        const addressSpan = document.getElementById("deposit-address");
+        const copyBtn = document.getElementById("copy-address");
+        const qrBox = document.getElementById("qr-box");
+
+        btn.addEventListener("click", function () {
+            content.style.display = content.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!btn.contains(event.target) && !content.contains(event.target)) {
+                content.style.display = "none";
+            }
+        });
+
+        document.querySelectorAll(".dropdown-item").forEach(item => {
+            item.addEventListener("click", function () {
+                btn.innerHTML = this.innerHTML + '<span class="arrow">&#9662;</span>';
+                content.style.display = "none";
+
+                const symbol = this.getAttribute("data-symbol");
+                const address = this.getAttribute("data-address");
+
+                addressSpan.innerText = address;
+
+                // QR Kod oluştur
+                qrBox.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?data=${address}&size=150x150" alt="QR Code" />`;
+            });
+        });
+
+        copyBtn.addEventListener("click", function () {
+            navigator.clipboard.writeText(addressSpan.innerText).then(() => {
+                alert("Address copied to clipboard!");
+            });
+        });
+    });
+</script>
