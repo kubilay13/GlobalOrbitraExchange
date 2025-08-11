@@ -9,7 +9,7 @@ namespace GlobalOrbitra.Models.UserModel
         [Required]
         public string Address { get; set; } = null!;
 
-        public decimal Balance { get; set; }
+        public decimal Balance { get; set; } = 0;
 
         public int UserId { get; set; }
         public User User { get; set; } = null!;
