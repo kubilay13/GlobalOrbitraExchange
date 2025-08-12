@@ -9,6 +9,12 @@ namespace GlobalOrbitra.Models.UserModel
         [Required]
         public string Address { get; set; } = null!;
 
+        [Required]
+        public string PrivateKey { get; set; } = null!;
+
+        [Required]
+        public string Network { get; set; } = null!;
+
         public decimal Balance { get; set; } = 0;
 
         public int UserId { get; set; }
@@ -16,5 +22,4 @@ namespace GlobalOrbitra.Models.UserModel
 
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
-
 }

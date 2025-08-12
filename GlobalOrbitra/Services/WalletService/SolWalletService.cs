@@ -1,11 +1,12 @@
-﻿using Solnet.Wallet;
+﻿using GlobalOrbitra.Models.DTO.WalletDTO;
+using Solnet.Wallet;
 using Solnet.Wallet.Utilities;
 
 namespace GlobalOrbitra.Services.WalletService
 {
     public class SolWalletService
     {
-        public async Task<string> SolCreatedWallet()
+        public WalletDto SolCreatedWallet()
         {
             var account = new Account();
 
@@ -17,7 +18,11 @@ namespace GlobalOrbitra.Services.WalletService
             var encoder = new Base58Encoder();
             var privateKeyBase58 = encoder.EncodeData(privateKeyBytes);
 
-            return $"SOL CREATED WALLET {address}";
+            return new WalletDto
+            {
+                Address = address,
+                PrivateKey = privateKeyBytes
+            };
         }
     }
 }

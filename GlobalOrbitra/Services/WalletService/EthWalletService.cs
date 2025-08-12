@@ -1,15 +1,21 @@
-﻿using Nethereum.Signer;
+﻿using GlobalOrbitra.Models.DTO.WalletDTO;
+using Nethereum.Signer;
 
 namespace GlobalOrbitra.Services.WalletService
 {
     public class EthWalletService
     {
-        public async Task<string> EthCreateWallet()
+        public WalletDto EthCreateWallet()
         {
             var key = EthECKey.GenerateKey();
             var privateKey = key.GetPrivateKey();
             var address = key.GetPublicAddress();
-            return $"ETH CREATED WALLET {address}";
+
+            return new WalletDto
+            {
+                Address = address,
+                PrivateKey = privateKey
+            };
         }
     }
 }

@@ -1,16 +1,16 @@
-﻿@{
-    ViewData["Title"] = "Giriş Yap";
-}
+﻿@model GlobalOrbitra.Models.UserModel.User
+
 <link href="~/css/login-signup.css" rel="stylesheet" />
 <div class="auth-wrapper">
     <div class="login-box">
         <h1>Kayıt Ol</h1>
-        <form method="post" action="/Account/Login">
-            <input type="text" name="username" placeholder="Kullanıcı Adı" required />
-            <input type="email" name="email" placeholder="E-posta" required />
-            <input type="password" name="password" placeholder="Şifre" required />
+        <form asp-action="SignUpMethod" method="post">
+            <input type="text" placeholder="Kullanıcı Adı" required asp-for="Username" />
+            <input type="email" placeholder="E-posta" required asp-for="Email" />
+            <input type="password" placeholder="Şifre" required asp-for="PasswordHash" />
             <a href="/LoginSignUp/Login" class="link">Giriş Yap</a>
             <button type="submit">Kayıt Ol</button>
         </form>
+
     </div>
 </div>
