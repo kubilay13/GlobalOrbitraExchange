@@ -22,18 +22,14 @@ Bitcoin, Ethereum, Binance Smart Chain, Solana ve Tron ağlarında işlem yapmay
    git clone https://github.com/kubilay13/GlobalOrbitraExchange.git
 Gerekli paketleri yükleyin:
 
-bash
-Kodu kopyala
+# Gerekli paketleri yükleyin
 dotnet restore
-Veri tabanını hazırlayın:
 
-bash
-Kodu kopyala
+# Veri tabanını hazırlayın
 dotnet ef migrations add InitialCreate
 dotnet ef database update
-Sunucuyu başlatın:
 
-bash
-Kodu kopyala
+# Sunucuyu başlatın
 dotnet run
+
 
