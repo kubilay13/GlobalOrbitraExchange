@@ -5,12 +5,22 @@
 <div class="auth-wrapper">
     <div class="login-box">
         <h1>Giriş Yap</h1>
-        <form method="post" action="/Account/Login">
-            <input type="text" name="username" placeholder="Kullanıcı Adı" required />
+        <form method="post" action="/LoginSignUp/Login">
+            @Html.AntiForgeryToken()
             <input type="email" name="email" placeholder="E-posta" required />
             <input type="password" name="password" placeholder="Şifre" required />
             <a href="/LoginSignUp/SignUp" class="link">Kayıt Ol</a>
             <button type="submit">Giriş Yap</button>
         </form>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="error-message">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <p>@error.ErrorMessage</p>
+                }
+            </div>
+        }
     </div>
 </div>
