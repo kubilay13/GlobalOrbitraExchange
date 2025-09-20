@@ -1,7 +1,9 @@
 ﻿using GlobalOrbitra.Db;
 using GlobalOrbitra.Models.UserModel;
 using GlobalOrbitra.Services.WalletService;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace GlobalOrbitra.Controllers
 {
@@ -104,7 +106,7 @@ namespace GlobalOrbitra.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult LoginUp(string email, string password)
+        public IActionResult Login(string email, string password)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
@@ -121,8 +123,16 @@ namespace GlobalOrbitra.Controllers
                 return View();
             }
 
-            // Giriş başarılı - session veya cookie ayarlanabilir
-            HttpContext.Session.SetInt32("UserId", user.Id);
+            var claims = new List<Claim>
+            {
+               new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+               new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            var identity = new ClaimsIdentity(claims, "MyCookieAuth");
+            var principal = new ClaimsPrincipal(identity);
+
+            HttpContext.SignInAsync("MyCookieAuth", principal);
 
             return RedirectToAction("Dashboard", "Dashboard");
         }

@@ -6,6 +6,12 @@ using GlobalOrbitra.Services.WalletService;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddAuthentication("MyCookieAuth")
+    .AddCookie("MyCookieAuth", options =>
+    {
+        options.LoginPath = "/Account/Login";  // giriþ yapýlmadýysa buraya yönlendir
+        options.AccessDeniedPath = "/Account/AccessDenied"; // yetkisiz eriþim olursa
+    });
 
 
 
@@ -45,7 +51,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
