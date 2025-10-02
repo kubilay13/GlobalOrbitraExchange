@@ -36,74 +36,84 @@ namespace GlobalOrbitra.Controllers
         }
 
         [HttpPost]
-        public IActionResult SignUpMethod(User model)
+        public IActionResult SignUpMethod(UserModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return BadRequest("Model geçersiz");
+
+            // 1️⃣ Kullanıcı oluştur
+            var user = new UserModel
             {
-                var user = new User
-                {
-                    Username = model.Username,
-                    Email = model.Email,
-                    PasswordHash = model.PasswordHash,
-                    CreatedAt = DateTime.UtcNow,
+                Username = model.Username,
+                Email = model.Email,
+                PasswordHash = model.PasswordHash,
+                CreatedAt = DateTime.UtcNow
+            };
+            _appDbContext.UserModels.Add(user);
+            _appDbContext.SaveChanges();
 
-                };
+            // 2️⃣ Token ID’lerini DB’den al (örn: TRX, ETH, BSC, SOL)
+            var trxToken = _appDbContext.TokenModels.First(t => t.Name == "TRX");
+            var ethToken = _appDbContext.TokenModels.First(t => t.Name == "ETH");
+            var bscToken = _appDbContext.TokenModels.First(t => t.Name == "BSC");
+            var solToken = _appDbContext.TokenModels.First(t => t.Name == "SOL");
 
-                _appDbContext.Users.Add(user);
-                _appDbContext.SaveChanges();
+            // 3️⃣ Cüzdan oluştur (servislerden)
+            var tronWallet = _tronWalletService.TronCreateWallet();
+            var ethereumWallet = _ethereumWalletService.EthCreateWallet();
+            var bscWallet = _bscWalletService.BscCreatedWallet();
+            var solanaWallet = _solanaWalletService.SolCreatedWallet();
 
-                var tronWallet = _tronWalletService.TronCreateWallet();
-                var ethereumWallet = _ethereumWalletService.EthCreateWallet();
-                var bscWallet = _bscWalletService.BscCreatedWallet();
-                var solanaWallet = _solanaWalletService.SolCreatedWallet();
-
-                var wallets = new List<UserWallet>
-                {
-                   new UserWallet
-                   {
-                       Address = tronWallet.Address,
-                       PrivateKey = tronWallet.PrivateKey,
-                       Network = "TRON",
-                       Balance = 0,
-                       UserId = user.Id,
-                       UpdatedAt = DateTime.UtcNow
-                   },
-                   new UserWallet
-                   {
-                       Address = ethereumWallet.Address,
-                       PrivateKey = ethereumWallet.PrivateKey,
-                       Network = "ETH",
-                       Balance = 0,
-                       UserId = user.Id,
-                       UpdatedAt = DateTime.UtcNow
-                   },
-                   new UserWallet
-                   {
-                       Address = bscWallet.Address,
-                       PrivateKey = bscWallet.PrivateKey,
-                       Network = "BSC",
-                       Balance = 0,
-                       UserId = user.Id,
-                       UpdatedAt = DateTime.UtcNow
-                   },
-                   new UserWallet
-                   {
-                       Address = solanaWallet.Address,
-                       PrivateKey = solanaWallet.PrivateKey,
-                       Network = "SOL",
-                       Balance = 0,
-                       UserId = user.Id,
-                       UpdatedAt = DateTime.UtcNow
-                   },
-                };
-
-                _appDbContext.UserWallets.AddRange(wallets);
-                _appDbContext.SaveChanges();
-                return RedirectToAction("Login", "LoginSignUp");
-
-            }
-            return Ok("Kullanıcı ve cüzdan oluşturuldu");
+            // 4️⃣ UserWallet ekle
+            var wallets = new List<UserWalletModel>
+    {
+        new UserWalletModel
+        {
+            Address = tronWallet.Address,
+            PrivateKey = tronWallet.PrivateKey,
+            Balance = 0,
+            UserId = user.Id,
+            TokenId = trxToken.Id,
+            UpdatedAt = DateTime.UtcNow
+        },
+        new UserWalletModel
+        {
+            Address = ethereumWallet.Address,
+            PrivateKey = ethereumWallet.PrivateKey,
+            Balance = 0,
+            UserId = user.Id,
+            TokenId = ethToken.Id,
+            UpdatedAt = DateTime.UtcNow
+        },
+        new UserWalletModel
+        {
+            Address = bscWallet.Address,
+            PrivateKey = bscWallet.PrivateKey,
+            Balance = 0,
+            UserId = user.Id,
+            TokenId = bscToken.Id,
+            UpdatedAt = DateTime.UtcNow
+        },
+        new UserWalletModel
+        {
+            Address = solanaWallet.Address,
+            PrivateKey = solanaWallet.PrivateKey,
+            Balance = 0,
+            UserId = user.Id,
+            TokenId = solToken.Id,
+            UpdatedAt = DateTime.UtcNow
         }
+    };
+
+         
+            _appDbContext.UserWalletModels.AddRange(wallets);
+            _appDbContext.SaveChanges();
+
+            return RedirectToAction("Login", "LoginSignUp");
+        }
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Login(string email, string password)
@@ -114,7 +124,7 @@ namespace GlobalOrbitra.Controllers
                 return View();
             }
 
-            var user = _appDbContext.Users
+            var user = _appDbContext.UserModels
                 .FirstOrDefault(u => u.Email == email && u.PasswordHash == password);
 
             if (user == null)

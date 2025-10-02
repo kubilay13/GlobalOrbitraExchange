@@ -2,7 +2,7 @@
 
 namespace GlobalOrbitra.Models.UserModel
 {
-    public class User
+    public class UserModel
     {
         public int Id { get; set; }
 
@@ -17,6 +17,6 @@ namespace GlobalOrbitra.Models.UserModel
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public ICollection<UserWallet> Wallets { get; set; } = new List<UserWallet>();
+        public ICollection<UserWalletModel> Wallets { get; set; } = new List<UserWalletModel>();
     }
 }

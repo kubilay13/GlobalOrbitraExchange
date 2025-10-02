@@ -7,11 +7,11 @@ namespace GlobalOrbitra.Controllers
     {
         public IActionResult Widthdraw()
         {
-            var assets = new List<Asset>
+            var assets = new List<TokenModel>
             {
-                new Asset { Symbol = "BTC", Name = "Bitcoin", ImageUrl = "/images/btc.png" },
-                new Asset { Symbol = "ETH", Name = "Ethereum", ImageUrl = "/images/eth.png" },
-                new Asset { Symbol = "USDT", Name = "Tether", ImageUrl = "/images/usdt.png" }
+                //new TokenModel { Symbol = "BTC", Name = "Bitcoin", ImageUrl = "/images/btc.png" },
+                //new TokenModel { Symbol = "ETH", Name = "Ethereum", ImageUrl = "/images/eth.png" },
+                //new TokenModel { Symbol = "USDT", Name = "Tether", ImageUrl = "/images/usdt.png" }
             };
 
                return View(assets);
@@ -19,11 +19,11 @@ namespace GlobalOrbitra.Controllers
 
         public IActionResult Deposit()
         {
-            var assets = new List<Asset>
+            var assets = new List<TokenModel>
             {
-                new Asset { Symbol = "BTC", Name = "Bitcoin", ImageUrl = "/images/btc.png" },
-                new Asset { Symbol = "ETH", Name = "Ethereum", ImageUrl = "/images/eth.png" },
-                new Asset { Symbol = "USDT", Name = "Tether", ImageUrl = "/images/usdt.png" }
+                //new TokenModel { Symbol = "BTC", Name = "Bitcoin", ImageUrl = "/images/btc.png" },
+                //new TokenModel { Symbol = "ETH", Name = "Ethereum", ImageUrl = "/images/eth.png" },
+                //new TokenModel { Symbol = "USDT", Name = "Tether", ImageUrl = "/images/usdt.png" }
             };
 
             return View(assets);
