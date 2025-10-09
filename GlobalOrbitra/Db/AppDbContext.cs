@@ -12,6 +12,8 @@ namespace GlobalOrbitra.Db
         public DbSet<UserWalletModel> UserWalletModels { get; set; } = null!;
         public DbSet<TokenModel> TokenModels { get; set; } = null!;
         public DbSet<TransactionModel> AssetTransactionModels { get; set; } = null!;
+        public DbSet<TransactionModel> Transactions { get; set; } = null!;
+
 
 
 
