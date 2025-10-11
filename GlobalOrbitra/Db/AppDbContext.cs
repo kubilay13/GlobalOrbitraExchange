@@ -21,6 +21,11 @@ namespace GlobalOrbitra.Db
         {
             base.OnModelCreating(modelBuilder);
 
+            // Decimal precision sorunu çözümü
+            modelBuilder.Entity<UserWalletModel>()
+                .Property(u => u.Balance)
+                .HasPrecision(18, 6);
+
             // 1️⃣ Chain seed
             modelBuilder.Entity<ChainModel>().HasData(
                 new ChainModel { Id = 1, Name = "Ethereum", Symbol = "ETH", ChainType = "EVM", RpcUrl = "https://mainnet.infura.io/v3/YOUR_PROJECT_ID", IsActive = true },
@@ -31,12 +36,11 @@ namespace GlobalOrbitra.Db
 
             // 2️⃣ Token seed
             modelBuilder.Entity<TokenModel>().HasData(
-     new TokenModel { Id = 1, Name = "ETH", Symbol = "ETH", ContractAddress = "0x0000000000000000000000000000000000000000", Decimal = 18, IsToken = false, ChainId = 1, IsActive = true },
-     new TokenModel { Id = 2, Name = "TRX", Symbol = "TRX", ContractAddress = "TRX_NATIVE", Decimal = 6, IsToken = false, ChainId = 2, IsActive = true },
-     new TokenModel { Id = 3, Name = "BSC", Symbol = "BSC", ContractAddress = "BSC_NATIVE", Decimal = 18, IsToken = false, ChainId = 3, IsActive = true },
-     new TokenModel { Id = 4, Name = "SOL", Symbol = "SOL", ContractAddress = "SOL_NATIVE", Decimal = 9, IsToken = false, ChainId = 4, IsActive = true }
- );
-
+                new TokenModel { Id = 1, Name = "ETH", Symbol = "ETH", ContractAddress = "0x0000000000000000000000000000000000000000", Decimal = 18, IsToken = false, ChainId = 1, IsActive = true },
+                new TokenModel { Id = 2, Name = "TRX", Symbol = "TRX", ContractAddress = "TRX_NATIVE", Decimal = 6, IsToken = false, ChainId = 2, IsActive = true },
+                new TokenModel { Id = 3, Name = "BSC", Symbol = "BSC", ContractAddress = "BSC_NATIVE", Decimal = 18, IsToken = false, ChainId = 3, IsActive = true },
+                new TokenModel { Id = 4, Name = "SOL", Symbol = "SOL", ContractAddress = "SOL_NATIVE", Decimal = 9, IsToken = false, ChainId = 4, IsActive = true }
+            );
         }
     }
 }

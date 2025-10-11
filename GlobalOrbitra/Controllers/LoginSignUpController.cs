@@ -74,6 +74,7 @@ namespace GlobalOrbitra.Controllers
             Balance = 0,
             UserId = user.Id,
             TokenId = trxToken.Id,
+            Network = "TRON",
             UpdatedAt = DateTime.UtcNow
         },
         new UserWalletModel
@@ -83,6 +84,7 @@ namespace GlobalOrbitra.Controllers
             Balance = 0,
             UserId = user.Id,
             TokenId = ethToken.Id,
+            Network = "ETH",
             UpdatedAt = DateTime.UtcNow
         },
         new UserWalletModel
@@ -92,6 +94,7 @@ namespace GlobalOrbitra.Controllers
             Balance = 0,
             UserId = user.Id,
             TokenId = bscToken.Id,
+            Network = "BSC",
             UpdatedAt = DateTime.UtcNow
         },
         new UserWalletModel
@@ -101,6 +104,7 @@ namespace GlobalOrbitra.Controllers
             Balance = 0,
             UserId = user.Id,
             TokenId = solToken.Id,
+            Network = "SOL",
             UpdatedAt = DateTime.UtcNow
         }
     };

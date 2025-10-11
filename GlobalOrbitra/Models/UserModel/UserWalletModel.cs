@@ -15,7 +15,7 @@ namespace GlobalOrbitra.Models.UserModel
 
         public int UserId { get; set; }
         public UserModel User { get; set; } = null!;
-
+        public string Network { get; set; } = null!;
         public int TokenId { get; set; }
         public TokenModel Token { get; set; } = null!;
 

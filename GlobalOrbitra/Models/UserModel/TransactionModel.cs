@@ -8,8 +8,10 @@
         public int UserId { get; set; }
         public UserModel User { get; set; } = null!;
 
-        // Hangi cüzdan adresi
+        //  cüzdan adresi
         public string WalletAddress { get; set; } = null!;
+        // Gönderen adres
+        public string SenderAddress { get; set; } = null!;
 
         // Hangi token/coin
         public int? TokenId { get; set; }
