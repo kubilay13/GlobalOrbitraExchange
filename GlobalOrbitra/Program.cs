@@ -27,8 +27,9 @@ builder.Services.AddScoped<TronWalletService>();
 builder.Services.AddScoped<EthWalletService>();
 builder.Services.AddScoped<BscWalletService>();
 builder.Services.AddScoped<SolWalletService>();
-builder.Services.AddScoped<TronWalletListenerService>();
+builder.Services.AddScoped<BttcWalletService>();   
 
+builder.Services.AddScoped<TronWalletListenerService>();
 builder.Services.AddHostedService<TronWalletBackgroundService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
