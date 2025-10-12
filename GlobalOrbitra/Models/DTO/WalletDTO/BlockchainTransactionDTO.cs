@@ -8,5 +8,7 @@
         public decimal Amount { get; set; }
         public string Network { get; set; } = null!;
         public DateTime Timestamp { get; set; }
+        public string TokenSymbol { get; set; } = null!;
+        //public string? TokenContract { get; set; }
     }
 }

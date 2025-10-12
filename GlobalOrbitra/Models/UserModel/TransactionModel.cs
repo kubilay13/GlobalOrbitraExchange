@@ -24,6 +24,7 @@
         // İşlem tipi ve durumu
         public string Type { get; set; } = null!; // deposit | withdrawal
         public string Status { get; set; } = "pending"; // pending | completed | failed
+       // public string? TokenContract { get; set; } // Token sözleşme adresi (varsa)
 
         // Blockchain işlem kimliği
         public string? TxHash { get; set; }

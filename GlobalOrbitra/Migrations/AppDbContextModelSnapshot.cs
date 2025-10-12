@@ -22,7 +22,7 @@ namespace GlobalOrbitra.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.Asset", b =>
+            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.ChainModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,8 +30,100 @@ namespace GlobalOrbitra.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("ChainType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RpcUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Symbol")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChainModel");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ChainType = "EVM",
+                            IsActive = true,
+                            Name = "Ethereum",
+                            RpcUrl = "https://mainnet.infura.io/v3/YOUR_PROJECT_ID",
+                            Symbol = "ETH"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ChainType = "TRON",
+                            IsActive = true,
+                            Name = "Tron",
+                            RpcUrl = "https://api.trongrid.io",
+                            Symbol = "TRX"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ChainType = "EVM",
+                            IsActive = true,
+                            Name = "Binance Smart Chain",
+                            RpcUrl = "https://bsc-dataseed.binance.org",
+                            Symbol = "BSC"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ChainType = "Solana",
+                            IsActive = true,
+                            Name = "Solana",
+                            RpcUrl = "https://api.mainnet-beta.solana.com",
+                            Symbol = "SOL"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ChainType = "TRON",
+                            IsActive = true,
+                            Name = "Tron Nile Testnet",
+                            RpcUrl = "https://nile.trongrid.io",
+                            Symbol = "TRX"
+                        });
+                });
+
+            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.TokenModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChainId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ContractAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Decimal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsToken")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -43,10 +135,113 @@ namespace GlobalOrbitra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Assets");
+                    b.HasIndex("ChainId");
+
+                    b.ToTable("TokenModels");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ChainId = 1,
+                            ContractAddress = "0x0000000000000000000000000000000000000000",
+                            Decimal = 18m,
+                            IsActive = true,
+                            IsToken = false,
+                            Name = "ETH",
+                            Symbol = "ETH"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ChainId = 2,
+                            ContractAddress = "TRX_NATIVE",
+                            Decimal = 6m,
+                            IsActive = true,
+                            IsToken = false,
+                            Name = "TRX",
+                            Symbol = "TRX"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ChainId = 3,
+                            ContractAddress = "BSC_NATIVE",
+                            Decimal = 18m,
+                            IsActive = true,
+                            IsToken = false,
+                            Name = "BSC",
+                            Symbol = "BSC"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ChainId = 4,
+                            ContractAddress = "SOL_NATIVE",
+                            Decimal = 9m,
+                            IsActive = true,
+                            IsToken = false,
+                            Name = "SOL",
+                            Symbol = "SOL"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ChainId = 5,
+                            ContractAddress = "TRX_NATIVE",
+                            Decimal = 6m,
+                            IsActive = true,
+                            IsToken = false,
+                            Name = "TRX (Testnet)",
+                            Symbol = "TRX"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ChainId = 5,
+                            ContractAddress = "TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf",
+                            Decimal = 6m,
+                            IsActive = true,
+                            IsToken = true,
+                            Name = "Tether USDT (Nile)",
+                            Symbol = "USDT"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ChainId = 5,
+                            ContractAddress = "TEMVynQpntMqkPxP6wXTW2K7e4sM3cRmWz",
+                            Decimal = 6m,
+                            IsActive = true,
+                            IsToken = true,
+                            Name = "USD Coin (Nile)",
+                            Symbol = "USDC"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            ChainId = 5,
+                            ContractAddress = "TVSvjZdyDSNocHm7dP3jvCmMNsCnMTPa5W",
+                            Decimal = 18m,
+                            IsActive = true,
+                            IsToken = true,
+                            Name = "BTT (Nile)",
+                            Symbol = "BTT"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            ChainId = 5,
+                            ContractAddress = "TFT7sNiNDGZcqL7z7dwXUPpxrx1Ewk8iGL",
+                            Decimal = 18m,
+                            IsActive = true,
+                            IsToken = true,
+                            Name = "USDD Token (Nile)",
+                            Symbol = "USDD"
+                        });
                 });
 
-            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.Transaction", b =>
+            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.TransactionModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,14 +252,24 @@ namespace GlobalOrbitra.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("Commusion")
+                    b.Property<decimal>("Commission")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("SenderAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Status")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TokenId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TxHash")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
@@ -80,12 +285,14 @@ namespace GlobalOrbitra.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TokenId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("AssetTransactions");
+                    b.ToTable("TransactionModel");
                 });
 
-            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.User", b =>
+            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.UserModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -111,10 +318,10 @@ namespace GlobalOrbitra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("UserModels");
                 });
 
-            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.UserWallet", b =>
+            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.UserWalletModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -127,15 +334,18 @@ namespace GlobalOrbitra.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 6)
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<string>("Network")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrivateKey")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TokenId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -145,34 +355,71 @@ namespace GlobalOrbitra.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TokenId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserWallets");
+                    b.ToTable("UserWalletModels");
                 });
 
-            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.Transaction", b =>
+            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.TokenModel", b =>
                 {
-                    b.HasOne("GlobalOrbitra.Models.UserModel.User", "User")
+                    b.HasOne("GlobalOrbitra.Models.UserModel.ChainModel", "Chain")
+                        .WithMany("TokenModels")
+                        .HasForeignKey("ChainId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chain");
+                });
+
+            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.TransactionModel", b =>
+                {
+                    b.HasOne("GlobalOrbitra.Models.UserModel.TokenModel", "Token")
+                        .WithMany()
+                        .HasForeignKey("TokenId");
+
+                    b.HasOne("GlobalOrbitra.Models.UserModel.UserModel", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Token");
+
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.UserWallet", b =>
+            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.UserWalletModel", b =>
                 {
-                    b.HasOne("GlobalOrbitra.Models.UserModel.User", "User")
+                    b.HasOne("GlobalOrbitra.Models.UserModel.TokenModel", "Token")
+                        .WithMany("UserWallets")
+                        .HasForeignKey("TokenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GlobalOrbitra.Models.UserModel.UserModel", "User")
                         .WithMany("Wallets")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Token");
+
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.User", b =>
+            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.ChainModel", b =>
+                {
+                    b.Navigation("TokenModels");
+                });
+
+            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.TokenModel", b =>
+                {
+                    b.Navigation("UserWallets");
+                });
+
+            modelBuilder.Entity("GlobalOrbitra.Models.UserModel.UserModel", b =>
                 {
                     b.Navigation("Wallets");
                 });
