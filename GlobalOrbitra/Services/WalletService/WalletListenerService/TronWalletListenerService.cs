@@ -94,25 +94,25 @@ namespace GlobalOrbitra.Services.WalletService.WalletListenerService
                    (sqlEx.Number == 2601 || sqlEx.Number == 2627);
         }
 
-        public async Task<List<BlockchainTransactionDTO>> GetIncomingTransactionsAsync(string address, bool useMainnet = false, int limit = 50)
+        public async Task<List<BlockchainTransactionDto>> GetIncomingTransactionsAsync(string address, bool useMainnet = false, int limit = 50)
         {
-            var transactions = new List<BlockchainTransactionDTO>();
+            var transactions = new List<BlockchainTransactionDto>();
 
             // Hem normal transactions hem de TRC20 transactions'ları al
             var normalTxs = await GetNormalTransactionsAsync(address, limit);
             var trc20Txs = await GetTRC20TransactionsAsync(address, limit);
 
             transactions.AddRange(normalTxs);
-            transactions.AddRange(trc20Txs);
+            transactions.AddRange((IEnumerable<BlockchainTransactionDto>)trc20Txs);
 
             return transactions;
         }
 
         // Normal TRX transferleri
-        private async Task<List<BlockchainTransactionDTO>> GetNormalTransactionsAsync(string address, int limit)
+        private async Task<List<BlockchainTransactionDto>> GetNormalTransactionsAsync(string address, int limit)
         {
             var url = $"{_apiTronNileTestUrl}/v1/accounts/{address}/transactions?limit={limit}&only_confirmed=true";
-            var transactions = new List<BlockchainTransactionDTO>();
+            var transactions = new List<BlockchainTransactionDto>();
 
             try
             {
@@ -150,7 +150,7 @@ namespace GlobalOrbitra.Services.WalletService.WalletListenerService
                         long timestamp = raw.GetProperty("timestamp").GetInt64();
                         DateTime transactionDate = DateTimeOffset.FromUnixTimeMilliseconds(timestamp).UtcDateTime;
 
-                        transactions.Add(new BlockchainTransactionDTO
+                        transactions.Add(new BlockchainTransactionDto
                         {
                             TxHash = tx.GetProperty("txID").GetString() ?? "",
                             From = fromBase58,
@@ -178,10 +178,10 @@ namespace GlobalOrbitra.Services.WalletService.WalletListenerService
         }
 
         // TRC20 Token transferleri
-        private async Task<List<BlockchainTransactionDTO>> GetTRC20TransactionsAsync(string address, int limit)
+        private async Task<List<BlockchainTransactionDto>> GetTRC20TransactionsAsync(string address, int limit)
         {
             var url = $"{_apiTronNileTestUrl}/v1/accounts/{address}/transactions/trc20?limit={limit}&only_confirmed=true";
-            var transactions = new List<BlockchainTransactionDTO>();
+            var transactions = new List<BlockchainTransactionDto>();
 
             try
             {
@@ -228,7 +228,7 @@ namespace GlobalOrbitra.Services.WalletService.WalletListenerService
                             var amount = rawAmount / (decimal)Math.Pow(10, tokenDecimals);
                             var transactionDate = DateTimeOffset.FromUnixTimeMilliseconds(timestamp).UtcDateTime;
 
-                            transactions.Add(new BlockchainTransactionDTO
+                            transactions.Add(new BlockchainTransactionDto
                             {
                                 TxHash = txHash,
                                 From = fromAddress,

@@ -9,9 +9,9 @@ namespace GlobalOrbitra.Models.UserModel
         [Required]
         public string Address { get; set; } = null!;
 
-        public string? PrivateKey { get; set; } // saklamak istersen kullan, istemezsen null
+        public string? PrivateKey { get; set; } 
 
-        public decimal Balance { get; set; } = 0;
+        //public decimal Balance { get; set; } = 0;
 
         public int UserId { get; set; }
         public UserModel User { get; set; } = null!;

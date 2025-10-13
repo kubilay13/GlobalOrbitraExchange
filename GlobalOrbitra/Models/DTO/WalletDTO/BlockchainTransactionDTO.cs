@@ -1,6 +1,6 @@
 ﻿namespace GlobalOrbitra.Models.DTO.WalletDTO
 {
-    public class BlockchainTransactionDTO
+    public class BlockchainTransactionDto
     {
         public string TxHash { get; set; } = null!;
         public string From { get; set; } = null!;
