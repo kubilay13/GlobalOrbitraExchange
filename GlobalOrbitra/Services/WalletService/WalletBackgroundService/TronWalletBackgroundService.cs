@@ -36,7 +36,7 @@ namespace GlobalOrbitra.Services.WalletService.WalletBackgroundService
                     }
                 }
 
-                // 30 saniye bekle, sonra tekrar çalışsın
+                // 10 saniye bekle, sonra tekrar çalışsın
                 await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
             }
         }

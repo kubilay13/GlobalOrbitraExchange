@@ -71,7 +71,6 @@ namespace GlobalOrbitra.Controllers
         {
             Address = tronWallet.Address,
             PrivateKey = tronWallet.PrivateKey,
-            Balance = 0,
             UserId = user.Id,
             TokenId = trxToken.Id,
             Network = "TRON",
@@ -81,7 +80,6 @@ namespace GlobalOrbitra.Controllers
         {
             Address = ethereumWallet.Address,
             PrivateKey = ethereumWallet.PrivateKey,
-            Balance = 0,
             UserId = user.Id,
             TokenId = ethToken.Id,
             Network = "ETH",
@@ -91,7 +89,6 @@ namespace GlobalOrbitra.Controllers
         {
             Address = bscWallet.Address,
             PrivateKey = bscWallet.PrivateKey,
-            Balance = 0,
             UserId = user.Id,
             TokenId = bscToken.Id,
             Network = "BSC",
@@ -101,7 +98,6 @@ namespace GlobalOrbitra.Controllers
         {
             Address = solanaWallet.Address,
             PrivateKey = solanaWallet.PrivateKey,
-            Balance = 0,
             UserId = user.Id,
             TokenId = solToken.Id,
             Network = "SOL",

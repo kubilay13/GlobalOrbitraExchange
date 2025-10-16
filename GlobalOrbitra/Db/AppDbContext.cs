@@ -22,9 +22,7 @@ namespace GlobalOrbitra.Db
             base.OnModelCreating(modelBuilder);
 
             // Decimal precision
-            modelBuilder.Entity<UserWalletModel>()
-                .Property(u => u.Balance)
-                .HasPrecision(18, 6);
+          //  modelBuilder.Entity<UserWalletModel>().Property(u => u.Balance).HasPrecision(18, 6);
 
             // 🌐 CHAINS
             modelBuilder.Entity<ChainModel>().HasData(
@@ -53,6 +51,18 @@ namespace GlobalOrbitra.Db
                 new TokenModel { Id = 8, Name = "BTT (Nile)", Symbol = "BTT", ContractAddress = "TVSvjZdyDSNocHm7dP3jvCmMNsCnMTPa5W", Decimal = 18, IsToken = true, ChainId = 5, IsActive = true },
                 new TokenModel { Id = 9, Name = "USDD Token (Nile)", Symbol = "USDD", ContractAddress = "TFT7sNiNDGZcqL7z7dwXUPpxrx1Ewk8iGL", Decimal = 18, IsToken = true, ChainId = 5, IsActive = true }
             );
+
+            modelBuilder.Entity<TokenModel>()
+                .Property(t => t.Decimal)
+                .HasPrecision(38, 18); // blockchain token değerleri için yüksek precision
+
+            modelBuilder.Entity<TransactionModel>()
+                .Property(t => t.Amount)
+                .HasPrecision(38, 18);
+
+            modelBuilder.Entity<TransactionModel>()
+                .Property(t => t.Commission)
+                .HasPrecision(38, 18);
         }
     }
 }

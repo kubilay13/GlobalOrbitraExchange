@@ -15,8 +15,6 @@ builder.Services.AddAuthentication("MyCookieAuth")
         options.AccessDeniedPath = "/Account/AccessDenied"; // yetkisiz eriþim olursa
     });
 
-
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<BinanceServices>();
@@ -27,10 +25,14 @@ builder.Services.AddScoped<TronWalletService>();
 builder.Services.AddScoped<EthWalletService>();
 builder.Services.AddScoped<BscWalletService>();
 builder.Services.AddScoped<SolWalletService>();
-builder.Services.AddScoped<BttcWalletService>();   
+builder.Services.AddScoped<BttcWalletService>();
 
+builder.Services.AddScoped<EthWalletListenerService>();
 builder.Services.AddScoped<TronWalletListenerService>();
 builder.Services.AddHostedService<TronWalletBackgroundService>();
+builder.Services.AddHostedService<EthWalletBackgroundService>();
+
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

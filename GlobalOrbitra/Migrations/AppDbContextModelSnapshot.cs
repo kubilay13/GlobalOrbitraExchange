@@ -117,7 +117,8 @@ namespace GlobalOrbitra.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Decimal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(38, 18)
+                        .HasColumnType("decimal(38,18)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -250,10 +251,12 @@ namespace GlobalOrbitra.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(38, 18)
+                        .HasColumnType("decimal(38,18)");
 
                     b.Property<decimal>("Commission")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(38, 18)
+                        .HasColumnType("decimal(38,18)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -332,10 +335,6 @@ namespace GlobalOrbitra.Migrations
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Balance")
-                        .HasPrecision(18, 6)
-                        .HasColumnType("decimal(18,6)");
 
                     b.Property<string>("Network")
                         .IsRequired()
