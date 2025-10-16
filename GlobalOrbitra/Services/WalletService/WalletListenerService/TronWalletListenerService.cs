@@ -21,18 +21,39 @@ namespace GlobalOrbitra.Services.WalletService.WalletListenerService
             _httpClient = new HttpClient();
         }
         // TRX bakiyesini al
-        public async Task<decimal> GetTrxBalanceAsync(string address)
+        public async Task<Dictionary<string, decimal>> GetTronBalancesAsync(string address)
         {
-            var url = $"{_apiTronNileTestUrl}/v1/accounts/{address}";
-            var response = await _httpClient.GetFromJsonAsync<JsonElement>(url);
+            var result = new Dictionary<string, decimal>(StringComparer.OrdinalIgnoreCase);
 
-            if (!response.TryGetProperty("data", out var data) || data.GetArrayLength() == 0)
+            // API çağrısı
+            var url = $"https://nile.trongrid.io/v1/accounts/{address}";
+            var json = await _httpClient.GetFromJsonAsync<JsonElement>(url);
+
+            if (!json.TryGetProperty("data", out var data) || data.GetArrayLength() == 0)
+                return result;
+
+            var acct = data[0];
+
+            // TRX bakiyesi
+            if (acct.TryGetProperty("balance", out var bal))
+                result["TRX"] = bal.GetInt64() / 1_000_000m;
+
+            // assetV2 içindeki tokenlar
+            if (acct.TryGetProperty("assetV2", out var assets) && assets.ValueKind == JsonValueKind.Array)
             {
-                return 0;
+                foreach (var tok in assets.EnumerateArray())
+                {
+                    var symbol = tok.GetProperty("key").GetString() ?? "UNKNOWN";
+                    var amount = tok.GetProperty("value").GetDecimal();
+
+                    // TRC20 token decimals genelde 6 → human readable
+                    result[symbol] = amount / 1_000_000m;
+                }
             }
-            var TRXBalance = data[0].GetProperty("balance").GetInt64();
-            return TRXBalance / 1_000_000m;
+
+            return result;
         }
+
 
         public async Task CheckIncomingForUserAsync(UserWalletModel userWallet)
         {
@@ -46,7 +67,7 @@ namespace GlobalOrbitra.Services.WalletService.WalletListenerService
                     bool exists = _dbContext.Transactions.Any(t => t.TxHash == tx.TxHash);
                     if (exists)
                     {
-                        Console.WriteLine($"[TRON Listener] İşlem zaten kayıtlı: {tx.TxHash}");
+                        //Console.WriteLine($"[TRON Listener] İşlem zaten kayıtlı: {tx.TxHash}");
                         continue;
                     }
 
