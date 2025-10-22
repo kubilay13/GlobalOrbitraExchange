@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "OTP Doğrulama";
+}
+<link href="~/css/login-signup.css" rel="stylesheet" />
+
+<div class="auth-wrapper">
+    <div class="login-box">
+        <h1>Doğrulama Kodu</h1>
+
+        <form method="post" asp-action="VerifyOtpPost">
+            @Html.AntiForgeryToken()
+            <!-- TempData olabilir; boşsa "" ile gönder -->
+            <input type="hidden" name="email" value="@(ViewBag.Email ?? "")" />
+
+            <input type="text"
+                   name="otp"
+                   placeholder="6 Haneli Kod"
+                   required
+                   maxlength="6"
+                   pattern="\d{6}"
+                   title="6 haneli sayıyı girin" />
+
+            <button type="submit">Doğrula</button>
+        </form>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="error-message">@ViewBag.Error</div>
+        }
+    </div>
+</div>

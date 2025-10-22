@@ -77,7 +77,7 @@ namespace GlobalOrbitra.Services.WalletService.WalletListenerService
 
                     if (token == null)
                     {
-                        Console.WriteLine($"[TRON Listener] Token bulunamadı: {tx.TokenSymbol}");
+                       // Console.WriteLine($"[TRON Listener] Token bulunamadı: {tx.TokenSymbol}");
                         continue;
                     }
 
@@ -210,7 +210,7 @@ namespace GlobalOrbitra.Services.WalletService.WalletListenerService
                 if (!response.TryGetProperty("data", out var txList))
                     return transactions;
 
-                Console.WriteLine($"[TRC20] {txList.GetArrayLength()} TRC20 işlemi bulundu");
+              //  Console.WriteLine($"[TRC20] {txList.GetArrayLength()} TRC20 işlemi bulundu");
 
                 foreach (var tx in txList.EnumerateArray())
                 {

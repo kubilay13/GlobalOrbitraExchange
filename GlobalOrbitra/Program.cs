@@ -32,6 +32,12 @@ builder.Services.AddScoped<TronWalletListenerService>();
 builder.Services.AddHostedService<TronWalletBackgroundService>();
 builder.Services.AddHostedService<EthWalletBackgroundService>();
 
+builder.Services.AddSingleton(new GlobalOrbitra.Services.MailService.GmailMailService(
+    "akdogankubilay431@gmail.com",
+    ""
+));
+
+
 
 
 builder.Services.AddDbContext<AppDbContext>(options =>

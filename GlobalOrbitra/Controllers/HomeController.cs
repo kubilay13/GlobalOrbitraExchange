@@ -30,8 +30,5 @@ namespace GlobalOrbitra.Controllers
         {
             return View();
         }
-        
-
     }
-
 }

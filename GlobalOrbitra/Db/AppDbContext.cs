@@ -1,4 +1,5 @@
-﻿using GlobalOrbitra.Models.UserModel;
+﻿using GlobalOrbitra.Models.MailModel;
+using GlobalOrbitra.Models.UserModel;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
@@ -13,8 +14,7 @@ namespace GlobalOrbitra.Db
         public DbSet<TokenModel> TokenModels { get; set; } = null!;
         public DbSet<TransactionModel> AssetTransactionModels { get; set; } = null!;
         public DbSet<TransactionModel> Transactions { get; set; } = null!;
-
-
+        public DbSet<OtpCodeModel> OtpCodes { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

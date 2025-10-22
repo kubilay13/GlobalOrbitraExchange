@@ -2,14 +2,15 @@
     ViewData["Title"] = "Giriş Yap";
 }
 <link href="~/css/login-signup.css" rel="stylesheet" />
+
 <div class="auth-wrapper">
     <div class="login-box">
         <h1>Giriş Yap</h1>
-        <form method="post" action="/LoginSignUp/Login">
+        <form method="post" asp-action="Login">
             @Html.AntiForgeryToken()
             <input type="email" name="email" placeholder="E-posta" required />
             <input type="password" name="password" placeholder="Şifre" required />
-            <a href="/LoginSignUp/SignUp" class="link">Kayıt Ol</a>
+            <a href="@Url.Action("SignUp", "LoginSignUp")" class="link">Kayıt Ol</a>
             <button type="submit">Giriş Yap</button>
         </form>
 

@@ -1,16 +1,27 @@
 ﻿@model GlobalOrbitra.Models.UserModel.UserModel
 
 <link href="~/css/login-signup.css" rel="stylesheet" />
+
 <div class="auth-wrapper">
     <div class="login-box">
         <h1>Kayıt Ol</h1>
         <form asp-action="SignUpMethod" method="post">
+            @Html.AntiForgeryToken()
             <input type="text" placeholder="Kullanıcı Adı" required asp-for="Username" />
             <input type="email" placeholder="E-posta" required asp-for="Email" />
             <input type="password" placeholder="Şifre" required asp-for="PasswordHash" />
-            <a href="/LoginSignUp/Login" class="link">Giriş Yap</a>
+            <a href="@Url.Action("Login", "LoginSignUp")" class="link">Giriş Yap</a>
             <button type="submit">Kayıt Ol</button>
         </form>
 
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="error-message">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <p>@error.ErrorMessage</p>
+                }
+            </div>
+        }
     </div>
 </div>
