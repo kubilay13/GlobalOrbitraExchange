@@ -3,15 +3,15 @@
 **GlobalOrbitraExchange**, **.NET ile geliştirilen ve çoklu blokzincir desteği sunan bir kripto para borsası altyapısıdır**.  
 Bitcoin, Ethereum, Binance Smart Chain, Solana ve Tron ağlarında işlem yapmayı hedeflemektedir. Proje hâlen yapım aşamasındadır ve güvenli, hızlı bir kullanıcı deneyimi sunmayı amaçlamaktadır.
 
-![Screenshot_5](https://github.com/user-attachments/assets/4bec5cb5-c34b-410b-90a7-ece67e848350)
+<img width="1918" height="859" alt="Screenshot_2" src="https://github.com/user-attachments/assets/bc5e89de-8756-491e-ba27-9f373701663d" />
 <img width="1599" height="683" alt="Screenshot_9" src="https://github.com/user-attachments/assets/63982db2-4f90-4dee-b5d7-a1cf5f338c85" />
-<img width="1599" height="540" alt="Screenshot_8" src="https://github.com/user-attachments/assets/54cbeff7-d6f9-48f1-b3e9-fc14bd3301aa" />
-<img width="1599" height="622" alt="Screenshot_7" src="https://github.com/user-attachments/assets/153a5a47-0f67-4029-b1c5-d3e9b05d4a72" />
-<img width="1599" height="610" alt="Screenshot_6" src="https://github.com/user-attachments/assets/ab7e5486-6e93-4e64-bac0-84223c8d87ef" />
-![Screenshot_3](https://github.com/user-attachments/assets/c7f56a30-d415-40cb-a004-846296902012)
+<img width="1919" height="837" alt="Screenshot_3" src="https://github.com/user-attachments/assets/3d229676-bb93-46d6-80fa-4c8b3a5b9beb" />
+<img width="1919" height="801" alt="Screenshot_4" src="https://github.com/user-attachments/assets/4b824af9-f955-42dc-b052-5c3816de5490" />
+<img width="1918" height="835" alt="Screenshot_5" src="https://github.com/user-attachments/assets/014fbc48-0b15-4eba-a0cc-fdaa93236f46" />
+
 
 ## Özellikler
-- Çoklu blokzincir desteği (BTC, ETH, BSC, SOL, TRX)
+- Çoklu blokzincir desteği 
 - Kullanıcı ve işlem yönetimi
 - .NET + Entity Framework tabanlı veri tabanı yönetimi
 - Güvenli ve hızlı API altyapısı
