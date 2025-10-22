@@ -1,84 +1,100 @@
-﻿<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.6/signalr.min.js"></script>
-<script src="~/js/binance.js"></script>
+﻿
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 <link href="~/css/dashboard.css" rel="stylesheet" />
 
-<body>
-    <div class="dashboard">
-        <div>
-            <!-- Portföy kartı -->
-            <div class="card">
-                <h2>Toplam Portföy</h2>
-                <div class="portfolio-value">$12,450.00</div>
-                <div class="positive">+3.24% (24s)</div>
-            </div>
+<body class="page-assets">
+    <div class="container">
 
-            <!-- Varlık dağılımı -->
-            <div class="card" style="margin-top:20px;">
-                <h2>Varlıklar</h2>
-                <div class="asset">
-                    <span>Bitcoin (BTC)</span>
-                    <span>0.5 BTC ≈ $14,725</span>
-                </div>
-                <div class="asset">
-                    <span>Ethereum (ETH)</span>
-                    <span>2.3 ETH ≈ $4,255</span>
-                </div>
-                <div class="asset">
-                    <span>Tether (USDT)</span>
-                    <span>$3,470</span>
-                </div>
+        <!-- === ÜST KART === -->
+        <div class="balance-card">
+            <div class="balance-header">
+                <h2>Estimated Balance</h2>
+                <span class="pnl">Today's PnL: -$0.00 (0.00%)</span>
             </div>
+            <div class="balance-value">0.00018789 BTC</div>
+            <div class="balance-sub">≈ $20.29</div>
 
-            <!-- Son İşlemler -->
-            <div class="card" style="margin-top:20px;">
-                <h2>Son İşlemler</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Tarih</th>
-                            <th>İşlem</th>
-                            <th>Tutar</th>
-                            <th>Durum</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>08-08-2025</td>
-                            <td>BTC Al</td>
-                            <td>$2,500</td>
-                            <td class="positive">Tamamlandı</td>
-                        </tr>
-                        <tr>
-                            <td>07-08-2025</td>
-                            <td>ETH Sat</td>
-                            <td>$1,200</td>
-                            <td class="negative">İptal</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="action-buttons">
+                <button onclick="location.href='/wallet/deposit'">Deposit</button>
+                <button onclick="location.href='/wallet/withdraw'">Withdraw</button>
+                <button onclick="location.href='/wallet/transfer'">Transfer</button>
+                <button onclick="location.href='/wallet/history'">History</button>
             </div>
         </div>
 
-        <!-- Sağ taraf -->
-        <div>
-            <div class="card">
-                <h2>Canlı Fiyatlar</h2>
-                <div class="asset">
-                    <span>BTC/USDT</span>
-                    <span id="BTCUSDT"></span>
-                </div>
-                <div class="asset">
-                    <span>ETH/USDT</span>
-                    <span id="ETHUSDT"></span>
-                </div>
-                <div class="asset">
-                    <span>BNB/USDT</span>
-                    <span id="BNBUSDT"></span>
+        <!-- === VARLIKLAR TABLOSU === -->
+        <div class="assets-card">
+            <div class="assets-header">
+                <h2>My Assets</h2>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search Coin..." />
+                    <label class="hide-small-assets">
+                        <input type="checkbox" /> Hide assets < $1
+                    </label>
                 </div>
             </div>
-        </div>
 
+            <table>
+                <thead>
+                    <tr>
+                        <th>Coin</th>
+                        <th>Amount</th>
+                        <th>Value (USD)</th>
+                        <th>Coin Price</th>
+                        <th>Today's PnL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="coin">
+                                <img src="https://cryptologos.cc/logos/binance-usd-busd-logo.svg" alt="BUSD">
+                                <div>
+                                    <div class="coin-name">RWUSD</div>
+                                    <div class="coin-symbol">RWUSD</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>20.29467884</td>
+                        <td>$20.29</td>
+                        <td>--</td>
+                        <td class="positive">+0.00%</td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div class="coin">
+                                <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.svg" alt="BNB">
+                                <div>
+                                    <div class="coin-name">BNB</div>
+                                    <div class="coin-symbol">BNB</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>0.0000165</td>
+                        <td>$0.00</td>
+                        <td>$1,067.69</td>
+                        <td class="positive">+0.00%</td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div class="coin">
+                                <img src="https://cryptologos.cc/logos/shiba-inu-shib-logo.svg" alt="SHIB">
+                                <div>
+                                    <div class="coin-name">SHIBA INU</div>
+                                    <div class="coin-symbol">SHIB</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>0.11011808</td>
+                        <td>$0.00</td>
+                        <td>$0.00001</td>
+                        <td class="negative">-0.01%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-
 </body>
-<script src="~/js/binance.js"></script>
+

@@ -428,7 +428,7 @@ body {
 }
 
     .navbar-link:is(:hover, :focus, .active) {
-        color: var(--blue-crayola);
+        color: #ffffff;
     }
 
 

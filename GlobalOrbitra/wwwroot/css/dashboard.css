@@ -1,47 +1,124 @@
-﻿
-.dashboard {
-    padding: 100px 20px 20px;
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+﻿body {
+    background-color: #0b0e11;
+    color: #eaecef;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
-.card {
-    background-color: #161b22;
+.page-assets .header {
+    height: 60px; /* header yüksekliği */
+    display: flex;
+    align-items: center; /* dikey ortala */
+    padding: 0 20px; /* yatay boşluk */
+}
+
+    .page-assets .header .container {
+        display: flex;
+        justify-content: space-between; /* logo ve menüyü ayır */
+        align-items: center; /* dikey ortala */
+    }
+
+.container {
+    max-width: 1200px;
+    margin: 60px auto;
     padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 18px rgba(56, 116, 255, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    animation: slideDownFade 0.6s ease forwards;
-    opacity: 0;
-    border: 1px solid #3874FF;
-    cursor: pointer;
-}
-.card:hover {
-        
-    transform: translateY(-5px);
-    box-shadow: 0 0 19px rgba(56, 116, 255, 0.4); 
-}
-.card h2 {
-    font-size: 18px;
-    margin-bottom: 15px;
-    color: #3874FF;
-}
-.portfolio-value {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 10px;
 }
 
-.asset {
+/* === ÜST BALANCE KARTI === */
+.balance-card {
+    background-color: #12161c;
+    border: 1px solid #1e2329;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+    margin-bottom: 30px;
+}
+
+.balance-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
-    padding: 8px;
-    background: #1e242d;
-    border-radius: 8px;
+    align-items: center;
+    margin-bottom: 15px;
 }
+
+    .balance-header h2 {
+        font-size: 16px;
+        color: #b7bdc6;
+        margin: 0;
+    }
+
+.balance-value {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.balance-sub {
+    font-size: 15px;
+    color: #848e9c;
+    margin-top: 5px;
+}
+
+.pnl {
+    color: #f6465d;
+    font-size: 14px;
+}
+
+.action-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+    .action-buttons button {
+        background-color: #1e2329;
+        color: #eaecef;
+        border: 1px solid #2b3139;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+        .action-buttons button:hover {
+            border-color: #3874FF;
+            color: #3874FF;
+        }
+
+/* === VARLIKLAR TABLOSU === */
+.assets-card {
+    background-color: #12161c;
+    border: 1px solid #1e2329;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.assets-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+    .assets-header h2 {
+        font-size: 18px;
+        color: #fff;
+    }
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .search-bar input {
+        background-color: #0b0e11;
+        border: 1px solid #2b3139;
+        border-radius: 6px;
+        padding: 6px 10px;
+        color: #eaecef;
+    }
 
 table {
     width: 100%;
@@ -49,52 +126,56 @@ table {
 }
 
 th, td {
-    padding: 10px;
+    padding: 12px 8px;
+    border-bottom: 1px solid #1e2329;
     text-align: left;
-    border-bottom: 1px solid #222;
+    font-size: 14px;
 }
 
 th {
-    color: #ccc;
+    color: #848e9c;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+td {
+    color: #eaecef;
+}
+
+.coin {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .coin img {
+        width: 24px;
+        height: 24px;
+    }
+
+.coin-name {
+    font-weight: 600;
+}
+
+.coin-symbol {
+    color: #848e9c;
+    font-size: 13px;
 }
 
 .positive {
-    color: #4caf50;
+    color: #0ecb81;
 }
 
 .negative {
-    color: #f44336;
-}
-.badge {
-    font-weight: 600;
-    margin-left: 8px;
-    font-size: 15px;
+    color: #f6465d;
 }
 
-.green {
-    color: #6fcf97;
-    font-size: 15px;
+.hide-small-assets {
+    font-size: 13px;
+    color: #848e9c;
 }
 
-.red {
-    color: #eb5757;
-    font-size: 15px;
-}
-
-@media (max-width: 768px) {
-    .dashboard {
-        padding: 100px 10px 20px;
-        grid-template-columns: 1fr; 
+    .hide-small-assets input {
+        margin-right: 4px;
     }
-}
-@keyframes slideDownFade {
-    0% {
-        transform: translateY(-30px);
-        opacity: 0;
-    }
-
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}

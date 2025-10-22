@@ -33,12 +33,9 @@ builder.Services.AddHostedService<TronWalletBackgroundService>();
 builder.Services.AddHostedService<EthWalletBackgroundService>();
 
 builder.Services.AddSingleton(new GlobalOrbitra.Services.MailService.GmailMailService(
-    "akdogankubilay431@gmail.com",
-    ""
+    "", // Mail Address
+    "" // Mail App Password
 ));
-
-
-
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

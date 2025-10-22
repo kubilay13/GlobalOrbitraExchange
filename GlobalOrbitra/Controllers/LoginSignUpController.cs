@@ -51,7 +51,7 @@ namespace GlobalOrbitra.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Model geçersiz");
 
-            // 1️⃣ Kullanıcı oluştur
+            // 1️⃣ Kullanıcı oluştur (henüz wallet yok)
             var user = new UserModel
             {
                 Username = model.Username,
@@ -60,66 +60,9 @@ namespace GlobalOrbitra.Controllers
                 CreatedAt = DateTime.UtcNow
             };
             _appDbContext.UserModels.Add(user);
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
 
-            // 2️⃣ Token ID’lerini DB’den al (örn: TRX, ETH, BSC, SOL)
-            var trxToken = _appDbContext.TokenModels.First(t => t.Name == "TRX");
-            var ethToken = _appDbContext.TokenModels.First(t => t.Name == "ETH");
-            var bscToken = _appDbContext.TokenModels.First(t => t.Name == "BSC");
-            var solToken = _appDbContext.TokenModels.First(t => t.Name == "SOL");
-
-            // 3️⃣ Cüzdan oluştur (servislerden)
-            var tronWallet = _tronWalletService.TronCreateWallet();
-            var ethereumWallet = _ethereumWalletService.EthCreateWallet();
-            var bscWallet = _bscWalletService.BscCreatedWallet();
-            var solanaWallet = _solanaWalletService.SolCreatedWallet();
-
-            // 4️⃣ UserWallet ekle
-            var wallets = new List<UserWalletModel>
-    {
-        new UserWalletModel
-        {
-            Address = tronWallet.Address,
-            PrivateKey = tronWallet.PrivateKey,
-            UserId = user.Id,
-            TokenId = trxToken.Id,
-            Network = "TRON",
-            UpdatedAt = DateTime.UtcNow
-        },
-        new UserWalletModel
-        {
-            Address = ethereumWallet.Address,
-            PrivateKey = ethereumWallet.PrivateKey,
-            UserId = user.Id,
-            TokenId = ethToken.Id,
-            Network = "ETH",
-            UpdatedAt = DateTime.UtcNow
-        },
-        new UserWalletModel
-        {
-            Address = bscWallet.Address,
-            PrivateKey = bscWallet.PrivateKey,
-            UserId = user.Id,
-            TokenId = bscToken.Id,
-            Network = "BSC",
-            UpdatedAt = DateTime.UtcNow
-        },
-        new UserWalletModel
-        {
-            Address = solanaWallet.Address,
-            PrivateKey = solanaWallet.PrivateKey,
-            UserId = user.Id,
-            TokenId = solToken.Id,
-            Network = "SOL",
-            UpdatedAt = DateTime.UtcNow
-        }
-    };
-
-
-            _appDbContext.UserWalletModels.AddRange(wallets);
-            _appDbContext.SaveChanges();
-
-
+            // 2️⃣ OTP oluştur
             var otp = OtpHelper.GenerateOtp();
             var salt = OtpHelper.GenerateSalt();
             var otpHash = OtpHelper.HashOtp(otp, salt);
@@ -138,11 +81,11 @@ namespace GlobalOrbitra.Controllers
             _appDbContext.OtpCodes.Add(otpRecord);
             await _appDbContext.SaveChangesAsync();
 
-            // Mail gönder
+            // 3️⃣ Mail gönder
             await _gmailMailService.SendOtpAsync(user.Email, otp);
 
-            // TempData ile email geçişi
             TempData["Email"] = user.Email;
+            TempData["UserId"] = user.Id; // UserId geçişi için
             return RedirectToAction("VerifyIndex");
         }
 
@@ -192,21 +135,14 @@ namespace GlobalOrbitra.Controllers
         public async Task<IActionResult> VerifyOtpPost(string email, string otp)
         {
             email = email ?? TempData["Email"] as string;
+            var userId = Convert.ToInt32(TempData["UserId"]);
             ViewBag.Email = email;
 
-            Console.WriteLine($"[LOG] Gelen email: {email}, OTP: {otp}");
+            var otpRecord = await _appDbContext.OtpCodes.Where(x => x.Email == email).OrderByDescending(x => x.CreatedAt).FirstOrDefaultAsync();
 
-             var otpRecord = await _appDbContext.OtpCodes
-        .Where(x => x.Email == email)
-        .OrderByDescending(x => x.CreatedAt)
-        .FirstOrDefaultAsync();
-
-
-            if (otpRecord == null)
+            if (otpRecord == null || otpRecord.ExpiresAt < DateTime.UtcNow)
             {
                 ViewBag.Error = "Kod geçersiz veya süresi dolmuş.";
-                ViewBag.Email = email;
-                Console.WriteLine("[LOG] OTP bulunamadı veya süresi dolmuş");
                 return View("VerifyIndex");
             }
 
@@ -214,16 +150,38 @@ namespace GlobalOrbitra.Controllers
             if (hashCheck != otpRecord.OtpHash)
             {
                 ViewBag.Error = "Kod hatalı.";
-                ViewBag.Email = email;
-                Console.WriteLine("[LOG] OTP hatalı");
                 return View("VerifyIndex");
             }
 
+            // ✅ OTP doğrulandı
             otpRecord.Consumed = true;
             await _appDbContext.SaveChangesAsync();
 
+            // ✅ Şimdi cüzdanları oluştur
+            var user = await _appDbContext.UserModels.FindAsync(userId);
+
+            var trxToken = _appDbContext.TokenModels.First(t => t.Name == "TRX");
+            var ethToken = _appDbContext.TokenModels.First(t => t.Name == "ETH");
+            var bscToken = _appDbContext.TokenModels.First(t => t.Name == "BSC");
+            var solToken = _appDbContext.TokenModels.First(t => t.Name == "SOL");
+
+            var tronWallet = _tronWalletService.TronCreateWallet();
+            var ethWallet = _ethereumWalletService.EthCreateWallet();
+            var bscWallet = _bscWalletService.BscCreatedWallet();
+            var solWallet = _solanaWalletService.SolCreatedWallet();
+
+            var wallets = new List<UserWalletModel>
+            {
+                  new() { Address = tronWallet.Address, PrivateKey = tronWallet.PrivateKey, UserId = user.Id, TokenId = trxToken.Id, Network = "TRON", UpdatedAt = DateTime.UtcNow },
+                  new() { Address = ethWallet.Address, PrivateKey = ethWallet.PrivateKey, UserId = user.Id, TokenId = ethToken.Id, Network = "ETH", UpdatedAt = DateTime.UtcNow },
+                  new() { Address = bscWallet.Address, PrivateKey = bscWallet.PrivateKey, UserId = user.Id, TokenId = bscToken.Id, Network = "BSC", UpdatedAt = DateTime.UtcNow },
+                  new() { Address = solWallet.Address, PrivateKey = solWallet.PrivateKey, UserId = user.Id, TokenId = solToken.Id, Network = "SOL", UpdatedAt = DateTime.UtcNow }
+            };
+
+            _appDbContext.UserWalletModels.AddRange(wallets);
+            await _appDbContext.SaveChangesAsync();
+
             TempData["OtpVerified"] = true;
-            Console.WriteLine("[LOG] OTP doğrulandı");
             return RedirectToAction("Login");
         }
     }

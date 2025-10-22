@@ -2,17 +2,377 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-     <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - GlobalOrbitra</title>
-   @*  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />  *@
+    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />  *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link href="~/css/walletconnection.css" rel="stylesheet" />
+    <style>
+        /* Dark/Light Mode CSS Variables */
+        :root {
+            /* Light Theme Colors */
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --header-bg: #ffffff;
+            --footer-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --link-color: #0066cc;
+            --btn-bg: #f0f0f0;
+            --btn-text: #333333;
+            --section-bg: #f8f9fa;
+            --table-header-bg: #f1f3f4;
+            --table-row-even: #f8f9fa;
+            --table-row-hover: #e9ecef;
+            --hero-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --trend-card-bg: #ffffff;
+            --badge-green: #10b981;
+            --badge-red: #ef4444;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme Colors */
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --header-bg: #2d2d2d;
+            --footer-bg: #2d2d2d;
+            --card-bg: #3d3d3d;
+            --border-color: #555555;
+            --link-color: #4dabf7;
+            --btn-bg: #555555;
+            --btn-text: #ffffff;
+            --section-bg: #2d2d2d;
+            --table-header-bg: #3d3d3d;
+            --table-row-even: #2d2d2d;
+            --table-row-hover: #4d4d4d;
+            --hero-bg: linear-gradient(135deg, #4f46e5 0%, #7e22ce 100%);
+            --trend-card-bg: #3d3d3d;
+            --badge-green: #34d399;
+            --badge-red: #f87171;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Base Styles */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            color: var(--text-color);
+        }
+
+        .navbar-link {
+            color: var(--text-color);
+        }
+
+            .navbar-link:hover {
+                color: var(--link-color);
+            }
+
+        .btn-outline {
+            border-color: var(--border-color);
+            color: var(--text-color);
+            background-color: var(--btn-bg);
+        }
+
+            .btn-outline:hover {
+                background-color: var(--link-color);
+                color: white;
+            }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            color: var(--text-color);
+            transition: background-color 0.3s ease;
+        }
+
+            .theme-toggle:hover {
+                background-color: var(--btn-bg);
+            }
+
+            .theme-toggle svg {
+                width: 20px;
+                height: 20px;
+                fill: currentColor;
+            }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--hero-bg);
+            color: white;
+        }
+
+        .hero-title, .hero-text {
+            color: white;
+        }
+
+        /* Trend Section */
+        .trend {
+            background-color: var(--section-bg);
+        }
+
+        .trend-card {
+            background-color: var(--trend-card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .card-title, .card-value {
+            color: var(--text-color);
+        }
+
+        .badge.green {
+            background-color: var(--badge-green);
+            color: white;
+        }
+
+        /* Market Section */
+        .market {
+            background-color: var(--bg-color);
+        }
+
+        .market-table {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .table-head {
+            background-color: var(--table-header-bg);
+        }
+
+        .table-heading {
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table-row {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+            .table-row:nth-child(even) {
+                background-color: var(--table-row-even);
+            }
+
+            .table-row:hover {
+                background-color: var(--table-row-hover);
+            }
+
+        .table-data {
+            color: var(--text-color);
+        }
+
+        .coin-name {
+            color: var(--text-color);
+        }
+
+        .current-price {
+            color: var(--text-color);
+        }
+
+        .last-update.green {
+            color: var(--badge-green);
+        }
+
+        /* Instruction Section */
+        .instruction {
+            background-color: var(--section-bg);
+        }
+
+        .instruction-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .card-title, .card-text {
+            color: var(--text-color);
+        }
+
+        /* About Section */
+        .about {
+            background-color: var(--bg-color);
+        }
+
+        .section-title, .section-text, .list-title, .item-text {
+            color: var(--text-color);
+        }
+
+        /* App Section */
+        .app {
+            background-color: var(--section-bg);
+        }
+
+        .item-title {
+            color: var(--text-color);
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: var(--footer-bg);
+            color: var(--text-color);
+        }
+
+        .footer-brand, .footer-list, .footer-contact-link {
+            color: var(--text-color);
+        }
+
+        .footer-link {
+            color: var(--text-color);
+        }
+
+            .footer-link:hover {
+                color: var(--link-color);
+            }
+
+        .footer-list-title {
+            color: var(--text-color);
+        }
+
+        .copyright {
+            color: var(--text-color);
+        }
+
+        .social-link {
+            color: var(--text-color);
+        }
+
+            .social-link:hover {
+                color: var(--link-color);
+            }
+
+        /* Wallet Options Modal */
+        .wallet-options {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+            .wallet-options button {
+                background-color: var(--btn-bg);
+                color: var(--btn-text);
+                border: 1px solid var(--border-color);
+            }
+
+                .wallet-options button:hover {
+                    background-color: var(--link-color);
+                    color: white;
+                }
+
+        /* Tab Styles */
+        .tab-btn {
+            background-color: var(--btn-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+            .tab-btn.active {
+                background-color: var(--link-color);
+                color: white;
+            }
+
+        /* Add to Favorite Button */
+        .add-to-fav {
+            color: var(--text-color);
+        }
+
+            .add-to-fav:hover {
+                color: #ffd700;
+            }
+
+        /* Button Primary */
+        .btn-primary {
+            background-color: var(--link-color);
+            color: white;
+            border: none;
+        }
+
+            .btn-primary:hover {
+                opacity: 0.9;
+            }
+
+        /* Section Titles */
+        .h2.section-title {
+            color: var(--text-color);
+        }
+
+        /* Card Analytics */
+        .card-analytics {
+            color: var(--text-color);
+        }
+
+        .user-icon {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+            .user-icon:hover {
+                color: #ffffff; /* Hoverda beyaz */
+                transform: scale(1.1); /* Hafif büyüme efekti */
+            }
+
+            .user-icon ion-icon {
+                margin-right: 5px;
+                font-size: 24px;
+            }
+
+       
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 40px; /* ikonun altına gelsin */
+            right: 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            min-width: 120px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+        }
+
+            .dropdown-menu a:hover {
+                background-color: #f0f0f0;
+            }
+    </style>
 </head>
 <body>
-            @RenderBody()
-        <header class="header" data-header>
+    @RenderBody()
+    <header class="header" data-header>
         <div class="container">
-
             <a href="#" class="logo">
                 <img src="/images/logo.svg" width="32" height="32" alt="Orbitra logo">
                 Orbitra
@@ -20,11 +380,6 @@
 
             <nav class="navbar" data-navbar>
                 <ul class="navbar-list">
-
-                    <li class="navbar-item">
-                        <a href="#" class="navbar-link active" data-nav-link>Homepage</a>
-                    </li>
-
                     <li class="navbar-item">
                         <a href="#" class="navbar-link" data-nav-link>Buy Crypto</a>
                     </li>
@@ -45,21 +400,34 @@
                 <span class="line line-3"></span>
             </button>
 
-            <a href="#" id="connectWallet" class="btn btn-outline">Login</a>
-          
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <!-- Sun icon for light mode -->
+                    @* <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0-12a.75.75 0 0 0 .75-.75V2a.75.75 0 0 0-1.5 0v2.25c0 .414.336.75.75.75zm0 15a.75.75 0 0 0-.75.75V22a.75.75 0 0 0 1.5 0v-2.25A.75.75 0 0 0 12 20zM4.222 5.222a.75.75 0 0 0 1.06 0l1.5-1.5a.75.75 0 0 0-1.06-1.06l-1.5 1.5a.75.75 0 0 0 0 1.06zm14.496 14.496a.75.75 0 0 0 1.06 0l1.5-1.5a.75.75 0 1 0-1.06-1.06l-1.5 1.5a.75.75 0 0 0 0 1.06zM2 12a.75.75 0 0 0 .75.75H5a.75.75 0 0 0 0-1.5H2.75A.75.75 0 0 0 2 12zm17 0a.75.75 0 0 0 .75-.75V9a.75.75 0 0 0-1.5 0v2.25c0 .414.336.75.75.75zM5.222 19.778a.75.75 0 0 0 0-1.06l-1.5-1.5a.75.75 0 0 0-1.06 1.06l1.5 1.5a.75.75 0 0 0 1.06 0zm14.496-14.496a.75.75 0 0 0 0-1.06l-1.5-1.5a.75.75 0 1 0-1.06 1.06l1.5 1.5a.75.75 0 0 0 1.06 0z" />
+                    </svg> *@
+                    <!-- Moon icon for dark mode -->
+                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" style="display: none;">
+                        <path d="M21.752 15.002A9.718 9.718 0 0 1 9 18.75c-5.385 0-9.75-4.365-9.75-9.75 0-5.385 4.365-9.75 9.75-9.75a9.716 9.716 0 0 1 8.837 5.535.75.75 0 0 1-.372.966.752.752 0 0 1-.966-.373A8.216 8.216 0 0 0 9 2.25C4.867 2.25 1.5 5.617 1.5 9.75s3.367 7.5 7.5 7.5a8.224 8.224 0 0 0 7.645-5.035.75.75 0 0 1 .964.372l.143.441z" />
+                    </svg>
+                </button>
+
+                <div class="header-actions">
+                    <div class="user-menu-wrapper" style="position: relative;">
+                        <a href="javascript:void(0)" class="user-icon" id="userIcon">
+                            <ion-icon name="person-outline"></ion-icon>
+                        </a>
+
+                        <div id="userMenu" class="dropdown-menu">
+                            <a href="/LoginSignUp/SignUp">Kayıt Ol</a>
+                            <a href="/LoginSignUp/Login">Giriş Yap</a>
+                        </div>
+                    </div>
+                </div>
+                   
+            </div>
         </div>
     </header>
-    <div class="wallet-options" id="walletOptions">
-        <h3>Select a Wallet</h3>
-        <button id="metamaskOption">Connect Metamask</button>
-        <button id="tronlinkOption">Connect TronLink</button>
-        <button id="closeOptions">Cancel</button>
-    </div>
-  
-
-    <!--
-       - #FOOTER
-     -->
 
     <footer class="footer">
 
@@ -216,7 +584,7 @@
             <div class="container">
 
                 <p class="copyright">
-                    &copy; 2024 Cryptex All Rights Reserved by <a href="#" class="copyright-link">GlobalOrbitra</a>
+                    &copy; 2025 Cryptex All Rights Reserved by <a href="#" class="copyright-link">GlobalOrbitra</a>
                 </p>
 
                 <ul class="social-list">
@@ -251,7 +619,56 @@
         </div>
 
     </footer>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
- 
+    <script>
+               document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const sunIcon = themeToggle.querySelector('.sun-icon');
+            const moonIcon = themeToggle.querySelector('.moon-icon');
+
+            // Otomatik dark mode
+            document.documentElement.setAttribute('data-theme', 'dark');
+            updateIcons('dark');
+
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                updateIcons(newTheme);
+            });
+
+            function updateIcons(theme) {
+                if (theme === 'dark') {
+                    sunIcon.style.display = 'none';
+                    moonIcon.style.display = 'block';
+                } else {
+                    sunIcon.style.display = 'block';
+                    moonIcon.style.display = 'none';
+                }
+            }
+        });
+
+
+                const userIcon = document.getElementById('userIcon');
+        const userMenu = document.getElementById('userMenu');
+
+        userIcon.addEventListener('click', () => {
+            userMenu.style.display = userMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!userIcon.contains(e.target) && !userMenu.contains(e.target)) {
+                userMenu.style.display = 'none';
+            }
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.6/signalr.min.js"></script>
+    <script src="~/js/Binance.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+    <script src="~/js/popularmarketcoin.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 </html>
