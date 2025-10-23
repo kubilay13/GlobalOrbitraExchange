@@ -1,5 +1,6 @@
 ﻿using GlobalOrbitra.Db;
 using GlobalOrbitra.Services.WalletService.WalletListenerService;
+using Microsoft.EntityFrameworkCore;
 
 namespace GlobalOrbitra.Services.WalletService.WalletBackgroundService
 {
@@ -14,12 +15,29 @@ namespace GlobalOrbitra.Services.WalletService.WalletBackgroundService
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var listener = new EthWalletListenerService();
-
             while (!stoppingToken.IsCancellationRequested)
             {
-                await listener.GetEthWalletBalances("0x95c7352A085d962321Ee616E9E0632849b73717C");
-                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+                using (var scope = _scopeFactory.CreateScope())
+                {
+                    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    var listener = new EthWalletListenerService(dbContext); // Sepolia sabit URL zaten listener içinde
+
+                    var wallets = await dbContext.UserWalletModels.ToListAsync();
+
+                    foreach (var wallet in wallets)
+                    {
+                        try
+                        {
+                            await listener.CheckIncomingForUserAsync(wallet);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"[Eth Background] Hata: {ex.Message}");
+                        }
+                    }
+                }
+
+                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken); // 10 saniyede bir kontrol
             }
         }
     }

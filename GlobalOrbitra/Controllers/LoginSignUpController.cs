@@ -138,7 +138,10 @@ namespace GlobalOrbitra.Controllers
             var userId = Convert.ToInt32(TempData["UserId"]);
             ViewBag.Email = email;
 
-            var otpRecord = await _appDbContext.OtpCodes.Where(x => x.Email == email).OrderByDescending(x => x.CreatedAt).FirstOrDefaultAsync();
+            var otpRecord = await _appDbContext.OtpCodes
+                .Where(x => x.Email == email)
+                .OrderByDescending(x => x.CreatedAt)
+                .FirstOrDefaultAsync();
 
             if (otpRecord == null || otpRecord.ExpiresAt < DateTime.UtcNow)
             {
@@ -157,28 +160,49 @@ namespace GlobalOrbitra.Controllers
             otpRecord.Consumed = true;
             await _appDbContext.SaveChangesAsync();
 
-            // ✅ Şimdi cüzdanları oluştur
+            // ✅ Şimdi kullanıcıyı bul
             var user = await _appDbContext.UserModels.FindAsync(userId);
+            if (user == null)
+            {
+                ViewBag.Error = "Kullanıcı bulunamadı.";
+                return View("VerifyIndex");
+            }
 
-            var trxToken = _appDbContext.TokenModels.First(t => t.Name == "TRX");
-            var ethToken = _appDbContext.TokenModels.First(t => t.Name == "ETH");
-            var bscToken = _appDbContext.TokenModels.First(t => t.Name == "BSC");
-            var solToken = _appDbContext.TokenModels.First(t => t.Name == "SOL");
+            // ✅ Tokenları DB’den al (Seed data’da bunlar olmalı)
+            var trxToken = _appDbContext.TokenModels.First(t => t.Symbol == "TRX");
+            var ethToken = _appDbContext.TokenModels.First(t => t.Symbol == "ETH");
+            var bscToken = _appDbContext.TokenModels.First(t => t.Symbol == "BSC");
+            var solToken = _appDbContext.TokenModels.First(t => t.Symbol == "SOL");
 
+
+            if (trxToken == null || ethToken == null || bscToken == null || solToken == null)
+            {
+                ViewBag.Error = "Token verileri eksik. Lütfen sistem yöneticisine başvurun.";
+                return View("VerifyIndex");
+            }
+
+            // ✅ Cüzdan oluşturma
             var tronWallet = _tronWalletService.TronCreateWallet();
             var ethWallet = _ethereumWalletService.EthCreateWallet();
             var bscWallet = _bscWalletService.BscCreatedWallet();
             var solWallet = _solanaWalletService.SolCreatedWallet();
 
+            if (tronWallet == null || ethWallet == null || bscWallet == null || solWallet == null)
+            {
+                ViewBag.Error = "Cüzdan oluşturulamadı. Lütfen tekrar deneyin.";
+                return View("VerifyIndex");
+            }
+
+            // ✅ Kullanıcıya ait cüzdan kayıtlarını ekle
             var wallets = new List<UserWalletModel>
             {
-                  new() { Address = tronWallet.Address, PrivateKey = tronWallet.PrivateKey, UserId = user.Id, TokenId = trxToken.Id, Network = "TRON", UpdatedAt = DateTime.UtcNow },
-                  new() { Address = ethWallet.Address, PrivateKey = ethWallet.PrivateKey, UserId = user.Id, TokenId = ethToken.Id, Network = "ETH", UpdatedAt = DateTime.UtcNow },
-                  new() { Address = bscWallet.Address, PrivateKey = bscWallet.PrivateKey, UserId = user.Id, TokenId = bscToken.Id, Network = "BSC", UpdatedAt = DateTime.UtcNow },
-                  new() { Address = solWallet.Address, PrivateKey = solWallet.PrivateKey, UserId = user.Id, TokenId = solToken.Id, Network = "SOL", UpdatedAt = DateTime.UtcNow }
+                new() { Address = tronWallet.Address, PrivateKey = tronWallet.PrivateKey, UserId = user.Id, TokenId = trxToken.Id, Network = "TRON", UpdatedAt = DateTime.UtcNow },
+                new() { Address = ethWallet.Address, PrivateKey = ethWallet.PrivateKey, UserId = user.Id, TokenId = ethToken.Id, Network = "ETH", UpdatedAt = DateTime.UtcNow },
+                new() { Address = bscWallet.Address, PrivateKey = bscWallet.PrivateKey, UserId = user.Id, TokenId = bscToken.Id, Network = "BSC", UpdatedAt = DateTime.UtcNow },
+                new() { Address = solWallet.Address, PrivateKey = solWallet.PrivateKey, UserId = user.Id, TokenId = solToken.Id, Network = "SOL", UpdatedAt = DateTime.UtcNow }
             };
 
-            _appDbContext.UserWalletModels.AddRange(wallets);
+            await _appDbContext.UserWalletModels.AddRangeAsync(wallets);
             await _appDbContext.SaveChangesAsync();
 
             TempData["OtpVerified"] = true;

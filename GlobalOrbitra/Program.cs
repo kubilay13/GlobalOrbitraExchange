@@ -28,9 +28,11 @@ builder.Services.AddScoped<SolWalletService>();
 builder.Services.AddScoped<BttcWalletService>();
 
 builder.Services.AddScoped<EthWalletListenerService>();
+builder.Services.AddHostedService<EthWalletBackgroundService>();
+
 builder.Services.AddScoped<TronWalletListenerService>();
 builder.Services.AddHostedService<TronWalletBackgroundService>();
-builder.Services.AddHostedService<EthWalletBackgroundService>();
+
 
 builder.Services.AddSingleton(new GlobalOrbitra.Services.MailService.GmailMailService(
     "", // Mail Address
