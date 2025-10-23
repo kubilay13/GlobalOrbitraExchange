@@ -20,7 +20,7 @@ namespace GlobalOrbitra.Services.WalletService.WalletBackgroundService
                 using (var scope = _scopeFactory.CreateScope())
                 {
                     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    var listener = new EthWalletListenerService(dbContext); // Sepolia sabit URL zaten listener içinde
+                    var listener = new EthWalletListenerService(dbContext); 
 
                     var wallets = await dbContext.UserWalletModels.ToListAsync();
 

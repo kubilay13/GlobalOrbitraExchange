@@ -1,120 +1,102 @@
-﻿<link href="~/css/marketdesign.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.6/signalr.min.js"></script>
-<script src="~/js/binance.js"></script>
-<div class="container">
-    <div class="overview-box">
-        <div class="overview-menu">
-            <div class="coin-table">
-                 <img src="~/images/btc.svg" width="24" height="24"/>
-                 <p>BTC</p>
-                 <p id="" class="p"></p>
-                 <p>24Hours</p>
+﻿<!doctype html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Crypto Dashboard - Clone</title>
+    <link href="~/css/allcryptomarket.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <div class="card-row">
+            <div class="card">
+                <h3>Hot</h3>
+                <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
+                    <div class="item"><div class="left"><div class="coin-icon" style="background:#f2a900">B</div><div><div>BNB</div><div class="small">$1.12K</div></div></div><div class="green">+4.83%</div></div>
+                    <div class="item"><div class="left"><div class="coin-icon" style="background:#f7931a">₿</div><div><div>BTC</div><div class="small">$110.54K</div></div></div><div class="green">+2.33%</div></div>
+                    <div class="item"><div class="left"><div class="coin-icon" style="background:#7b61ff">E</div><div><div>ETH</div><div class="small">$3.87K</div></div></div><div class="green">+1.87%</div></div>
+                </div>
             </div>
-            <div class="coin-table">
-                <img src="~/images/ETH.svg" width="24" height="24" />
-                <p>ETH</p>
-                <p id=""></p>
-                <p>24Hours</p>
+
+            <div class="card">
+                <h3>New</h3>
+                <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
+                    <div class="item"><div class="left"><div class="coin-icon" style="background:#3ddc84">T</div><div><div>TURTLE</div><div class="small">$0.1941</div></div></div><div class="red">-1.87%</div></div>
+                    <div class="item"><div class="left"><div class="coin-icon" style="background:#2ec4ff">Z</div><div><div>ZBT</div><div class="small">$0.2802</div></div></div><div class="green">+9.71%</div></div>
+                </div>
             </div>
-            <div class="coin-table">
-                <img src="~/images/BNB.svg" width="24" height="24" />
-                <p>BNB</p>
-                <p id=""></p>
-                <p>24Hours</p>
+
+            <div class="card">
+                <h3>Top Gainer</h3>
+                <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
+                    <div class="item"><div class="left"><div class="coin-icon">B</div><div><div>BEL</div><div class="small">$0.2656</div></div></div><div class="green">+24.64%</div></div>
+                    <div class="item"><div class="left"><div class="coin-icon">Y</div><div><div>YB</div><div class="small">$0.4863</div></div></div><div class="green">+23.15%</div></div>
+                </div>
             </div>
-        </div>
-        <div class="overview-menu">
-            <div class="coin-table">
-                <img src="~/images/btc.svg" width="24" height="24" />
-                <p>BTC</p>
-                <p>Price</p>
-                <p>24Hours</p>
-            </div>
-            <div class="coin-table">
-                <img src="~/images/btc.svg" width="24" height="24" />
-                <p>BTC</p>
-                <p>Price</p>
-                <p>24Hours</p>
-            </div>
-            <div class="coin-table">
-                <img src="~/images/btc.svg" width="24" height="24" />
-                <p>BTC</p>
-                <p>Price</p>
-                <p>24Hours</p>
-            </div>
-        </div>
-        <div class="overview-menu">
-            <div class="coin-table">
-                <img src="~/images/btc.svg" width="24" height="24" />
-                <p>BTC</p>
-                <p>Price</p>
-                <p>24Hours</p>
-            </div>
-            <div class="coin-table">
-                <img src="~/images/btc.svg" width="24" height="24" />
-                <p>BTC</p>
-                <p>Price</p>
-                <p>24Hours</p>
-            </div>
-            <div class="coin-table">
-                <img src="~/images/btc.svg" width="24" height="24" />
-                <p>BTC</p>
-                <p>Price</p>
-                <p>24Hours</p>
+
+            <div class="card">
+                <h3>Top Volume</h3>
+                <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
+                    <div class="item"><div class="left"><div class="coin-icon">₿</div><div><div>BTC</div><div class="small">$110.54K</div></div></div><div class="green">+2.33%</div></div>
+                    <div class="item"><div class="left"><div class="coin-icon">E</div><div><div>ETH</div><div class="small">$3.87K</div></div></div><div class="green">+1.87%</div></div>
+                </div>
             </div>
         </div>
-        <div class="overview-menu">
-            <div class="coin-table">
-                <img src="~/images/btc.svg" width="24" height="24" />
-                <p>BTC</p>
-                <p>Price</p>
-                <p>24Hours</p>
+
+        <div class="panel">
+            <div class="title-row">
+                <div>
+                    <h2 style="margin:0;font-size:16px">Top Tokens by Market Capitalization</h2>
+                    <div class="subtitle">Son 24 saat, fiyat değişimleri ve piyasa değerleri</div>
+                </div>
+                <div class="controls">
+                    <input type="text" id="search" class="search" placeholder="Token ara...">
+                </div>
+                <div style="display:flex;gap:10px;align-items:center">
+                    <div class="tabs">
+                        <button class="tab active" data-range="24h">24h</button>
+                        <button class="tab" data-range="7d">7d</button>
+                        <button class="tab" data-range="30d">30d</button>
+                    </div>
+                </div>
             </div>
-            <div class="coin-table">
-                <img src="~/images/btc.svg" width="24" height="24" />
-                <p>BTC</p>
-                <p>Price</p>
-                <p>24Hours</p>
-            </div>
-            <div class="coin-table">
-                <img src="~/images/btc.svg" width="24" height="24" />
-                <p>BTC</p>
-                <p>Price</p>
-                <p>24Hours</p>
-            </div>
+
+            <table id="tokenTable">
+                <thead>
+                    <tr><th>Name</th><th>Price</th><th>Change</th><th>24h Volume</th><th>Market Cap</th></tr>
+                </thead>
+                <tbody>
+                    <tr data-symbol="BTC"><td class="namecell"><div class="coin-icon" style="background:#f7931a">₿</div><div><div>BTC <span class="small">Bitcoin</span></div></div></td><td class="price">110,540.67<br><div class="small">$110,540.67</div></td><td class="green">+2.33%</td><td>$60.75B</td><td>$2.20T</td></tr>
+                    <tr data-symbol="ETH"><td class="namecell"><div class="coin-icon" style="background:#7b61ff">E</div><div><div>ETH <span class="small">Ethereum</span></div></div></td><td class="price">3,872.68<br><div class="small">$3,872.68</div></td><td class="green">+1.87%</td><td>$39.51B</td><td>$467.02B</td></tr>
+                    <tr data-symbol="USDT"><td class="namecell"><div class="coin-icon" style="background:#28a745">T</div><div><div>USDT <span class="small">TetherUS</span></div></div></td><td class="price">1.00<br><div class="small">$1.00</div></td><td class="green">+0.01%</td><td>$141.84B</td><td>$182.54B</td></tr>
+                    <tr data-symbol="BNB"><td class="namecell"><div class="coin-icon" style="background:#f2a900">B</div><div><div>BNB <span class="small">BNB</span></div></div></td><td class="price">1,120.08<br><div class="small">$1,120.08</div></td><td class="green">+4.83%</td><td>$5.61B</td><td>$155.66B</td></tr>
+                    <tr data-symbol="XRP"><td class="namecell"><div class="coin-icon" style="background:#3b3b3b">X</div><div><div>XRP <span class="small">XRP</span></div></div></td><td class="price">2.41<br><div class="small">$2.41</div></td><td class="green">+1.20%</td><td>$3.66B</td><td>$143.95B</td></tr>
+                    <tr data-symbol="SOL"><td class="namecell"><div class="coin-icon" style="background:#00a3ff">S</div><div><div>SOL <span class="small">Solana</span></div></div></td><td class="price">191.55<br><div class="small">$191.55</div></td><td class="green">+5.89%</td><td>$7.04B</td><td>$104.45B</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
+    <script>
+        // search filter
+        const search = document.getElementById('search');
+        const rows = Array.from(document.querySelectorAll('#tokenTable tbody tr'));
+        search.addEventListener('input', (e)=>{
+          const q = e.target.value.trim().toLowerCase();
+          rows.forEach(r=>{
+            const sym = r.getAttribute('data-symbol').toLowerCase();
+            const name = r.querySelector('.namecell').innerText.toLowerCase();
+            r.style.display = (q === '' || sym.includes(q) || name.includes(q)) ? '' : 'none';
+          })
+        });
 
-    <div class="market-table-container">
-        <table class="market-table">
-            <thead>
-                <tr>
-                    <th>Coin</th>
-                    <th>Fiyat</th>
-                    <th>Değişim</th>
-                    <th>Hacim</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="coin-name"><img src="/images/btc.svg" alt="BTC" /> Bitcoin (BTC)</td>
-                    <td id="BTCUSDT"></td>
-                    <td class="price-positive">+1.45%</td>
-                    <td>$23.1B</td>
-                </tr>
-                <tr>
-                    <td class="coin-name"><img src="/images/eth.svg" alt="ETH" /> Ethereum (ETH)</td>
-                    <td id="ETHUSDT"></td>
-                    <td class="price-negative">-0.82%</td>
-                    <td>$12.7B</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="pagination">
-            <button>1</button>
-            <button>2</button>
-            <button>3</button>
-        </div>
-    </div>
-</div>
+        // tabs interactivity (demo only)
+        document.querySelectorAll('.tab').forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+            btn.classList.add('active');
+            // here you could fetch & update price/change columns
+          })
+        })
+    </script>
+</body>
+</html>

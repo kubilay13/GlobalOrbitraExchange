@@ -1,74 +1,233 @@
-﻿<link href="~/css/coinmarketdesign.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.7/signalr.min.js"></script>
-
-
-
-<div class="container">
-    <div class="left-side">
-        <div class="marketbox fade-slide-up">
-            <img id="coin-logo" class="coin-logo" src="" width="36" height="36" alt="Coin Market png" />
-            <h3 id="coin-name" class="coin-name"></h3>
-            <h3><span id="price" class="price"></span></h3>
-            <h3><span id="price-percentage" class="percentage"></span></h3>
-        </div>
-
-        <div class="tradingview-widget-container fade-slide-up" style="margin-top: 30px;">
-            <div id="tradingview_chart"></div>
-        </div>
-    </div>
-
-    <div class="transactionbox fade-slide-up">
-        <div class="trade-form">
-            <h3>İşlem</h3>
-
-            <label>Miktar</label>
-            <input type="number" placeholder="Miktar girin" />
-
-            <label>Fiyat</label>
-            <input type="number" placeholder="Fiyat girin" />
-
-            <div class="button-group">
-                <button class="buy-btn">AL</button>
-                <button class="sell-btn">SAT</button>
+﻿<!doctype html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="~/css/coinmarket.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="app" role="application" aria-label="Trading panel">
+        <!-- LEFT: Market list -->
+        <aside class="sidebar" aria-label="Market list">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+                <div style="font-weight:700;color:var(--accent)">Market</div>
+               
             </div>
-        </div>
+
+            <div class="side-search"><input id="side-search" placeholder="Search your token..." /></div>
+
+            <div class="coin-list" id="coinList">
+                <!-- örnek coinlar -->
+                <div class="coin-item" data-symbol="BTCUSDT">
+                    <div class="coin-left">
+                        <div class="coin-avatar" style="background:linear-gradient(135deg,#f7931a,#f5a623)">₿</div>
+                        <div class="coin-meta"><div class="name">Bitcoin</div><div class="sub">0.75 BTC</div></div>
+                    </div>
+                    <div style="text-align:right">
+                        <div class="coin-price">$110,540</div>
+                        <div class="coin-change">+2.33%</div>
+                    </div>
+                </div>
+
+                <div class="coin-item" data-symbol="ETHUSDT">
+                    <div class="coin-left">
+                        <div class="coin-avatar" style="background:linear-gradient(135deg,#7b61ff,#5e3fff)">Ξ</div>
+                        <div class="coin-meta"><div class="name">Ethereum</div><div class="sub">0.75 ETH</div></div>
+                    </div>
+                    <div style="text-align:right">
+                        <div class="coin-price">$3,872</div>
+                        <div class="coin-change" style="color:var(--success)">+1.87%</div>
+                    </div>
+                </div>
+
+                <div class="coin-item" data-symbol="SOLUSDT">
+                    <div class="coin-left">
+                        <div class="coin-avatar" style="background:linear-gradient(135deg,#00a3ff,#0077ff)">◎</div>
+                        <div class="coin-meta"><div class="name">Solana</div><div class="sub">0.75 SOL</div></div>
+                    </div>
+                    <div style="text-align:right">
+                        <div class="coin-price">$191.55</div>
+                        <div class="coin-change" style="color:var(--success)">+5.89%</div>
+                    </div>
+                </div>
+
+                <!-- çoğaltılmış örnekler (scroll görünümü) -->
+                <div class="coin-item" data-symbol="XRPUSDT"><div class="coin-left"><div class="coin-avatar" style="background:#3b3b3b">X</div><div class="coin-meta"><div class="name">XRP</div><div class="sub">0.75 XRP</div></div></div><div style="text-align:right"><div class="coin-price">$2.41</div><div class="coin-change" style="color:var(--success)">+1.20%</div></div></div>
+
+                <div class="coin-item" data-symbol="BNBUSDT"><div class="coin-left"><div class="coin-avatar" style="background:linear-gradient(135deg,#f2a900,#e8b800)">B</div><div class="coin-meta"><div class="name">BNB</div><div class="sub">0.75 BNB</div></div></div><div style="text-align:right"><div class="coin-price">$1,120</div><div class="coin-change" style="color:var(--success)">+4.83%</div></div></div>
+
+                <div class="coin-item" data-symbol="ADAUSDT"><div class="coin-left"><div class="coin-avatar" style="background:linear-gradient(135deg,#00d07a,#00b06a)">A</div><div class="coin-meta"><div class="name">Cardano</div><div class="sub">0.75 ADA</div></div></div><div style="text-align:right"><div class="coin-price">$0.90</div><div class="coin-change" style="color:var(--success)">+0.85%</div></div></div>
+
+            </div>
+        </aside>
+
+        <!-- CENTER: Chart + depth -->
+        <main class="center" aria-label="Chart area">
+            <div class="chart-header">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div style="font-weight:700;font-size:15px"> <span id="curSymbol">BTCUSDT</span></div>
+                    <div style="color:var(--muted);font-size:13px">24 HOUR</div>
+                </div>
+            </div>
+
+            <div class="chart-box" id="chartBox">
+                <!-- TradingView widget container -->
+                <div id="tradingview_chart" style="width:100%;height:100%;min-height:280px;border-radius:8px;overflow:hidden"></div>
+            </div>
+
+            <div class="depth-area" aria-hidden="false">
+                <div class="depth-left">
+                   
+                    <div class="small-table">
+                        <div class="row buy"><div>225</div><div>0.12</div></div>
+                        <div class="row buy"><div>224</div><div>0.08</div></div>
+                        <div class="row sell"><div>226</div><div>0.09</div></div>
+                        <div class="row sell"><div>227</div><div>0.15</div></div>
+                    </div>
+                </div>
+
+                <div class="depth-center">
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <div style="font-weight:700;color:var(--muted)">Order Volume</div>
+                        <div style="font-size:13px;color:var(--muted)">Market Depth</div>
+                    </div>
+                    <div class="heatmap" aria-hidden="true">
+                        <!-- fake heat cells to mimic the image -->
+                        <div class="heat-cell" style="background:linear-gradient(90deg, rgba(255,80,80,0.08), rgba(255,80,80,0.02))"></div>
+                        <div class="heat-cell" style="background:linear-gradient(90deg, rgba(255,80,80,0.07), rgba(255,80,80,0.02))"></div>
+                        <div class="heat-cell" style="background:linear-gradient(90deg, rgba(200,200,50,0.06), rgba(200,200,50,0.02))"></div>
+                        <div class="heat-cell" style="background:linear-gradient(90deg, rgba(60,180,120,0.10), rgba(60,180,120,0.02))"></div>
+                        <div class="heat-cell" style="background:linear-gradient(90deg, rgba(60,180,120,0.14), rgba(60,180,120,0.02))"></div>
+                        <div class="heat-cell" style="background:linear-gradient(90deg, rgba(60,180,120,0.10), rgba(60,180,120,0.02))"></div>
+                        <div class="heat-cell" style="background:linear-gradient(90deg, rgba(255,80,80,0.04), rgba(255,80,80,0.02))"></div>
+                        <div class="heat-cell" style="background:linear-gradient(90deg, rgba(255,100,100,0.02), rgba(255,100,100,0.01))"></div>
+                    </div>
+
+                    <!-- miniature order volume numbers -->
+                    <div style="display:flex;gap:8px;margin-top:8px">
+                        <div style="flex:1;font-size:13px;color:var(--muted)"><div>Price</div><div style="font-weight:700;margin-top:6px">$110K</div></div>
+                        <div style="flex:1;font-size:13px;color:var(--muted)"><div>Volume</div><div style="font-weight:700;margin-top:6px">60.7B</div></div>
+                        <div style="flex:1;font-size:13px;color:var(--muted)"><div>Time</div><div style="font-weight:700;margin-top:6px">12:00</div></div>
+                    </div>
+                </div>
+
+                <div class="depth-right">
+                    <div style="font-weight:700;margin-bottom:8px;color:var(--muted)">Trade History</div>
+                    <div class="small-table">
+                        <div class="row buy"><div>Buy</div><div>0.02</div></div>
+                        <div class="row sell"><div>Sell</div><div>0.50</div></div>
+                        <div class="row buy"><div>Buy</div><div>0.10</div></div>
+                        <div class="row sell"><div>Sell</div><div>0.06</div></div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- RIGHT: Trade / orderbook -->
+        <aside class="trade" aria-label="Trade panel">
+            <h3>Trade</h3>
+
+            <div style="font-size:13px;color:var(--muted);display:flex;justify-content:space-between">
+                <div>Price</div><div>Volume</div><div style="width:28px;text-align:right">Total</div>
+            </div>
+
+            <div class="orderbook" id="orderbook">
+                <!-- sample order rows similar to image: green buys on top, red sells below -->
+                <div class="order-row sell"><div>110,600</div><div>+40</div><div>245.324</div></div>
+                <div class="order-row sell"><div>110,590</div><div>+30</div><div>245.123</div></div>
+                <div class="order-row sell"><div>110,580</div><div>+20</div><div>244.999</div></div>
+
+                <div style="height:8px"></div>
+
+                <div class="order-row buy"><div>110,540</div><div>-10</div><div>243.554</div></div>
+                <div class="order-row buy"><div>110,530</div><div>-20</div><div>243.123</div></div>
+                <div class="order-row buy"><div>110,520</div><div>-40</div><div>242.801</div></div>
+            </div>
+
+            <div class="form">
+                <label>Miktar</label>
+                <input id="amount" type="number" placeholder="Miktar girin (örn: 0.01)">
+
+                <label>Fiyat</label>
+                <input id="price" type="number" placeholder="Fiyat (örn: 110540)">
+
+                <div style="display:flex;gap:8px;align-items:center">
+                    <div style="flex:1">
+                        <div style="font-size:12px;color:var(--muted)">Total</div>
+                        <div id="total" style="font-weight:700;font-size:16px">$0.00</div>
+                    </div>
+ 
+                </div>
+                <div style="display:flex;gap:8px;margin-top:6px">
+                    <button class="btn buy" id="buyBtn">Buy</button>
+                    <button class="btn sell" id="sellBtn">Sell</button>
+                </div>
+            </div>
+
+            <div class="footer-info">Last update: <span id="lastUpdate">—</span></div>
+        </aside>
     </div>
-    <div class="transaction-about">
-        <p> </p>
-    </div>
 
-</div>
+    <!-- TradingView -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script>
+        // init tradingview widget
+        function renderChart(symbol){
+          document.getElementById('tradingview_chart').innerHTML = '';
+          new TradingView.widget({
+            "width": "100%",
+            "height": "100%",
+            "symbol": symbol,
+            "interval": "60",
+            "timezone": "Etc/UTC",
+            "theme": "dark",
+            "style": "1",
+            "locale": "tr",
+            "toolbar_bg": "#0b1220",
+            "container_id": "tradingview_chart",
+            "enable_publishing": false,
+            "allow_symbol_change": false
+          });
+          document.getElementById('curSymbol').innerText = symbol;
+        }
 
-<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.7/signalr.min.js"></script>
+        // default
+        renderChart('BINANCE:BTCUSDT');
 
-<script>
-    window.onload = function () {
-      // TradingView Ayarı
-      const params = new URLSearchParams(window.location.search);
-      const symbol = params.get("symbol")?.toUpperCase() || "BTCUSDT";
-      const tradingviewSymbol = "BINANCE:" + symbol;
+        // coin list click -> update chart
+        document.querySelectorAll('.coin-item').forEach(item=>{
+          item.addEventListener('click',()=>{
+            const s = item.getAttribute('data-symbol') || 'BTCUSDT';
+            renderChart('BINANCE:' + s);
+            // visual active
+            document.querySelectorAll('.coin-item').forEach(c=>c.style.borderColor='transparent');
+            item.style.borderColor='rgba(47,105,255,0.16)';
+            // update last update
+            document.getElementById('lastUpdate').innerText = new Date().toLocaleTimeString();
+          })
+        });
 
-       new TradingView.widget({
-      "width": "100%",
-      "height": 400,
-      "symbol": tradingviewSymbol,
-      "interval": "30",
-      "timezone": "Etc/UTC",
-      "theme": "dark",
-      "style": "1",
-      "locale": "tr",
-      "toolbar_bg": "#1e1e1e",
-      "enable_publishing": false,
-      "allow_symbol_change": false,
-      "container_id": "tradingview_chart"
-    });
-      // popularmarketcoinprices.js içeriği buraya gömülmüş gibi çalışsın istiyorsan, çağır:
-      const script = document.createElement('script');
-      script.src = '/js/popularmarketcoinprices.js';  // Yol doğruysa
-      document.body.appendChild(script);
-    }
-</script>
+        // search filter for left list
+        const search = document.getElementById('side-search');
+        search.addEventListener('input', (e)=>{
+          const q = e.target.value.toLowerCase();
+          document.querySelectorAll('.coin-item').forEach(it=>{
+            const txt = it.querySelector('.coin-meta .name').innerText.toLowerCase();
+            it.style.display = txt.includes(q) ? '' : 'none';
+          });
+        });
 
+        // calc total
+        const amount = document.getElementById('amount');
+        const price = document.getElementById('price');
+        function calcTotal(){ const a = parseFloat(amount.value)||0; const p = parseFloat(price.value)||0; document.getElementById('total').innerText = '$' + (a*p).toFixed(2); }
+        amount.addEventListener('input',calcTotal); price.addEventListener('input',calcTotal);
 
-
+        // buttons mock
+        document.getElementById('buyBtn').addEventListener('click', ()=> alert('Buy order (demo)'));
+        document.getElementById('sellBtn').addEventListener('click', ()=> alert('Sell order (demo)'));
+    </script>
+</body>
+</html>
