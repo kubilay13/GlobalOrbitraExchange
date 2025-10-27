@@ -21,11 +21,7 @@ builder.Services.AddScoped<BinanceServices>();
 builder.Services.AddSingleton<BinanceSocketClient>();
 builder.Services.AddSingleton<BinanceRestClient>();
 
-builder.Services.AddScoped<TronWalletService>();
-builder.Services.AddScoped<EthWalletService>();
-builder.Services.AddScoped<BscWalletService>();
-builder.Services.AddScoped<SolWalletService>();
-builder.Services.AddScoped<BttcWalletService>();
+builder.Services.AddScoped<WalletService>();
 
 builder.Services.AddScoped<EthWalletListenerService>();
 builder.Services.AddHostedService<EthWalletBackgroundService>();
@@ -35,8 +31,8 @@ builder.Services.AddHostedService<TronWalletBackgroundService>();
 
 
 builder.Services.AddSingleton(new GlobalOrbitra.Services.MailService.GmailMailService(
-    "", // Mail Address
-    "" // Mail App Password
+    "akdogankubilay431@gmail.com", // Mail Address
+    "cxaq slwo wgfp lsqw" // Mail App Password
 ));
 
 builder.Services.AddDbContext<AppDbContext>(options =>

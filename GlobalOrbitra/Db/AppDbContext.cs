@@ -1,7 +1,6 @@
 ﻿using GlobalOrbitra.Models.MailModel;
 using GlobalOrbitra.Models.UserModel;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace GlobalOrbitra.Db
 {
@@ -26,9 +25,6 @@ namespace GlobalOrbitra.Db
                 .HasIndex(t => t.TxHash)
                 .IsUnique();
 
-            // Decimal precision
-            //  modelBuilder.Entity<UserWalletModel>().Property(u => u.Balance).HasPrecision(18, 6);
-
             // 🌐 CHAINS
             modelBuilder.Entity<ChainModel>().HasData(
                 // Mainnets
@@ -36,33 +32,47 @@ namespace GlobalOrbitra.Db
                 new ChainModel { Id = 2, Name = "Tron", Symbol = "TRX", ChainType = "TRON", RpcUrl = "https://api.trongrid.io", IsActive = true },
                 new ChainModel { Id = 3, Name = "Binance Smart Chain", Symbol = "BSC", ChainType = "EVM", RpcUrl = "https://bsc-dataseed.binance.org", IsActive = true },
                 new ChainModel { Id = 4, Name = "Solana", Symbol = "SOL", ChainType = "Solana", RpcUrl = "https://api.mainnet-beta.solana.com", IsActive = true },
+                new ChainModel { Id = 5, Name = "BitTorrent Chain", Symbol = "BTTC", ChainType = "EVM", RpcUrl = "https://api.mainnet-beta.com", IsActive = true },
 
-                // ✅ Tron Testnet (Nile)
-                new ChainModel { Id = 5, Name = "Tron Nile Testnet", Symbol = "TRX", ChainType = "TRON", RpcUrl = "https://nile.trongrid.io", IsActive = true },
-
-                // ✅ ETH Sepolia Testnet EKLENDİ
-                new ChainModel { Id = 6, Name = "Ethereum Sepolia Testnet", Symbol = "ETH", ChainType = "EVM", RpcUrl = "https://sepolia.infura.io/v3/YOUR_PROJECT_ID", IsActive = true }
+                //---------------------TEST AĞLARI------------------------------
+                new ChainModel { Id = 6, Name = "Tron Nile Testnet", Symbol = "TRX", ChainType = "TRON", RpcUrl = "https://nile.trongrid.io", IsActive = true },
+                new ChainModel { Id = 7, Name = "Ethereum Sepolia Testnet", Symbol = "ETH", ChainType = "EVM", RpcUrl = "https://sepolia.infura.io/v3/YOUR_PROJECT_ID", IsActive = true },
+                new ChainModel { Id = 8, Name = "BitTorrent Chain Testnet", Symbol = "BTTC", ChainType = "EVM", RpcUrl = "https://api.testnet.bittorrentchain.io", IsActive = true },
+                new ChainModel { Id = 9, Name = "Binance Smart Chain Testnet", Symbol = "BSC", ChainType = "EVM", RpcUrl = "https://api.testnet.bittorrentchain.io", IsActive = true }
             );
 
             // 💰 TOKENS
             modelBuilder.Entity<TokenModel>().HasData(
                 // === MAINNET TOKENS ===
-                new TokenModel { Id = 1, Name = "ETH", Symbol = "ETH", ContractAddress = "0x0000000000000000000000000000000000000000", Decimal = 18, IsToken = false, ChainId = 1, IsActive = true },
+                new TokenModel { Id = 1, Name = "ETH", Symbol = "ETH", ContractAddress = "ETH_NATIVE", Decimal = 18, IsToken = false, ChainId = 1, IsActive = true },
                 new TokenModel { Id = 2, Name = "TRX", Symbol = "TRX", ContractAddress = "TRX_NATIVE", Decimal = 6, IsToken = false, ChainId = 2, IsActive = true },
                 new TokenModel { Id = 3, Name = "BSC", Symbol = "BSC", ContractAddress = "BSC_NATIVE", Decimal = 18, IsToken = false, ChainId = 3, IsActive = true },
                 new TokenModel { Id = 4, Name = "SOL", Symbol = "SOL", ContractAddress = "SOL_NATIVE", Decimal = 9, IsToken = false, ChainId = 4, IsActive = true },
+                new TokenModel { Id = 5, Name = "BTT", Symbol = "BTT", ContractAddress = "BTT_NATIVE", Decimal = 18, IsToken = true, ChainId = 5, IsActive = true },
 
-                // === 🧪 TRON NILE TESTNET TOKENS ===
-                new TokenModel { Id = 5, Name = "TRX (Testnet)", Symbol = "TRX", ContractAddress = "TRX_NATIVE", Decimal = 6, IsToken = false, ChainId = 5, IsActive = true },
-                new TokenModel { Id = 6, Name = "Tether USDT (Nile)", Symbol = "USDT", ContractAddress = "TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf", Decimal = 6, IsToken = true, ChainId = 5, IsActive = true },
-                new TokenModel { Id = 7, Name = "USD Coin (Nile)", Symbol = "USDC", ContractAddress = "TEMVynQpntMqkPxP6wXTW2K7e4sM3cRmWz", Decimal = 6, IsToken = true, ChainId = 5, IsActive = true },
-                new TokenModel { Id = 8, Name = "BTT (Nile)", Symbol = "BTT", ContractAddress = "TVSvjZdyDSNocHm7dP3jvCmMNsCnMTPa5W", Decimal = 18, IsToken = true, ChainId = 5, IsActive = true },
-                new TokenModel { Id = 9, Name = "USDD Token (Nile)", Symbol = "USDD", ContractAddress = "TFT7sNiNDGZcqL7z7dwXUPpxrx1Ewk8iGL", Decimal = 18, IsToken = true, ChainId = 5, IsActive = true },
+
+                //---------------------TEST TOKENLERİ------------------------------
+
+                // ✅ TRON NILE TESTNET TOKENS
+                new TokenModel { Id = 6, Name = "TRX (Testnet)", Symbol = "TRX", ContractAddress = "TRX_NATIVE", Decimal = 6, IsToken = false, ChainId = 5, IsActive = true },
+                new TokenModel { Id = 7, Name = "Tether USDT (Nile)", Symbol = "USDT", ContractAddress = "TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf", Decimal = 6, IsToken = true, ChainId = 5, IsActive = true },
+                new TokenModel { Id = 8, Name = "USD Coin (Nile)", Symbol = "USDC", ContractAddress = "TEMVynQpntMqkPxP6wXTW2K7e4sM3cRmWz", Decimal = 6, IsToken = true, ChainId = 5, IsActive = true },
+                new TokenModel { Id = 9, Name = "BTT (Nile)", Symbol = "BTT", ContractAddress = "TVSvjZdyDSNocHm7dP3jvCmMNsCnMTPa5W", Decimal = 18, IsToken = true, ChainId = 5, IsActive = true },
+                new TokenModel { Id = 10, Name = "USDD Token (Nile)", Symbol = "USDD", ContractAddress = "TFT7sNiNDGZcqL7z7dwXUPpxrx1Ewk8iGL", Decimal = 18, IsToken = true, ChainId = 5, IsActive = true },
+
+                //-------------------------------------------------
 
                 // ✅ ETH SEPOLIA TESTNET TOKENS EKLENDİ
-                new TokenModel { Id = 10, Name = "ETH (Sepolia)", Symbol = "ETH", ContractAddress = "0x0000000000000000000000000000000000000000", Decimal = 18, IsToken = false, ChainId = 6, IsActive = true },
-                new TokenModel { Id = 11, Name = "USDT (Sepolia)", Symbol = "USDT", ContractAddress = "0xaA8E23Fb1079EA71e0a56F48a2aA51851D8433D0", Decimal = 6, IsToken = true, ChainId = 6, IsActive = true },
-                new TokenModel { Id = 12, Name = "USDC (Sepolia)", Symbol = "USDC", ContractAddress = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238", Decimal = 6, IsToken = true, ChainId = 6, IsActive = true }
+                new TokenModel { Id = 11, Name = "ETH (Sepolia)", Symbol = "ETH", ContractAddress = "0x0000000000000000000000000000000000000000", Decimal = 18, IsToken = false, ChainId = 6, IsActive = true },
+                new TokenModel { Id = 12, Name = "USDT (Sepolia)", Symbol = "USDT", ContractAddress = "0xaA8E23Fb1079EA71e0a56F48a2aA51851D8433D0", Decimal = 6, IsToken = true, ChainId = 6, IsActive = true },
+                new TokenModel { Id = 13, Name = "USDC (Sepolia)", Symbol = "USDC", ContractAddress = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238", Decimal = 6, IsToken = true, ChainId = 6, IsActive = true },
+                //-------------------------------------------------
+
+                // ✅ BTT TESTNET TOKENS EKLENDİ
+                new TokenModel { Id = 14, Name = "BTT Testnet", Symbol = "BTT", ContractAddress = "BTT_NATIVE", Decimal = 6, IsToken = true, ChainId = 8, IsActive = true },
+
+                // ✅ BSC TESTNET TOKENS EKLENDİ
+                new TokenModel { Id = 15, Name = "BSC Testnet", Symbol = "BSC", ContractAddress = "BSC_NATIVE", Decimal = 18, IsToken = false, ChainId = 9, IsActive = true }
             );
 
             modelBuilder.Entity<TokenModel>()

@@ -13,21 +13,16 @@ namespace GlobalOrbitra.Controllers
     public class LoginSignUpController : Controller
     {
         private readonly AppDbContext _appDbContext;
-        private readonly TronWalletService _tronWalletService;
-        private readonly EthWalletService _ethereumWalletService;
-        private readonly BscWalletService _bscWalletService;
-        private readonly SolWalletService _solanaWalletService;
         private readonly GmailMailService _gmailMailService;
+        private readonly WalletService _walletService;
 
 
-        public LoginSignUpController(AppDbContext appDbContext, EthWalletService ethereumWalletService, BscWalletService bscWalletService, SolWalletService solanaWalletService, TronWalletService tronWalletService, GmailMailService gmailMailService)
+        public LoginSignUpController(AppDbContext appDbContext,WalletService walletService, GmailMailService gmailMailService)
         {
+            _walletService = walletService;
             _appDbContext = appDbContext;
-            _ethereumWalletService = ethereumWalletService;
-            _bscWalletService = bscWalletService;
-            _solanaWalletService = solanaWalletService;
-            _tronWalletService = tronWalletService;
             _gmailMailService = gmailMailService;
+
         }
 
         public IActionResult Login()
@@ -168,24 +163,26 @@ namespace GlobalOrbitra.Controllers
                 return View("VerifyIndex");
             }
 
-            // ✅ Tokenları DB’den al (Seed data’da bunlar olmalı)
+            // ✅ Tokenları DB’den al (Seed data’da bunlar)
             var trxToken = _appDbContext.TokenModels.First(t => t.Symbol == "TRX");
             var ethToken = _appDbContext.TokenModels.First(t => t.Symbol == "ETH");
             var bscToken = _appDbContext.TokenModels.First(t => t.Symbol == "BSC");
             var solToken = _appDbContext.TokenModels.First(t => t.Symbol == "SOL");
+            var bttcToken = _appDbContext.TokenModels.First(t => t.Symbol == "BTT");
 
 
-            if (trxToken == null || ethToken == null || bscToken == null || solToken == null)
+            if (trxToken == null || ethToken == null || bscToken == null || solToken == null || bttcToken== null)
             {
                 ViewBag.Error = "Token verileri eksik. Lütfen sistem yöneticisine başvurun.";
                 return View("VerifyIndex");
             }
 
             // ✅ Cüzdan oluşturma
-            var tronWallet = _tronWalletService.TronCreateWallet();
-            var ethWallet = _ethereumWalletService.EthCreateWallet();
-            var bscWallet = _bscWalletService.BscCreatedWallet();
-            var solWallet = _solanaWalletService.SolCreatedWallet();
+            var tronWallet = _walletService.TronWallet;
+            var ethWallet = _walletService.EthWallet;
+            var bscWallet = _walletService.BscWallet;
+            var solWallet = _walletService.SolWallet;
+            var bttcwallet = _walletService.BttcWallet;
 
             if (tronWallet == null || ethWallet == null || bscWallet == null || solWallet == null)
             {
@@ -199,7 +196,8 @@ namespace GlobalOrbitra.Controllers
                 new() { Address = tronWallet.Address, PrivateKey = tronWallet.PrivateKey, UserId = user.Id, TokenId = trxToken.Id, Network = "TRON", UpdatedAt = DateTime.UtcNow },
                 new() { Address = ethWallet.Address, PrivateKey = ethWallet.PrivateKey, UserId = user.Id, TokenId = ethToken.Id, Network = "ETH", UpdatedAt = DateTime.UtcNow },
                 new() { Address = bscWallet.Address, PrivateKey = bscWallet.PrivateKey, UserId = user.Id, TokenId = bscToken.Id, Network = "BSC", UpdatedAt = DateTime.UtcNow },
-                new() { Address = solWallet.Address, PrivateKey = solWallet.PrivateKey, UserId = user.Id, TokenId = solToken.Id, Network = "SOL", UpdatedAt = DateTime.UtcNow }
+                new() { Address = solWallet.Address, PrivateKey = solWallet.PrivateKey, UserId = user.Id, TokenId = solToken.Id, Network = "SOL", UpdatedAt = DateTime.UtcNow },
+                new() { Address = bttcwallet.Address, PrivateKey = bttcwallet.PrivateKey, UserId = user.Id, TokenId = bttcToken.Id, Network = "BTTC", UpdatedAt = DateTime.UtcNow }
             };
 
             await _appDbContext.UserWalletModels.AddRangeAsync(wallets);

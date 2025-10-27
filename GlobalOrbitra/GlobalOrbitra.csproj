@@ -21,6 +21,7 @@
     <PackageReference Include="Nethereum.Web3" Version="5.0.0" />
     <PackageReference Include="Solnet.Wallet" Version="6.1.0" />
     <PackageReference Include="TronNet" Version="0.2.0" />
+    <PackageReference Include="UnifiedChainWallet" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

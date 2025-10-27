@@ -49,7 +49,7 @@ namespace GlobalOrbitra.Services
                     await _hubContext.Clients.All.SendAsync("InitialPriceChange", coin, initialPriceChangePercent);
                 }
                 await SubscribeToTickerUpdates(coin);
-                await Task.Delay(0); // Buraya gecikme koy
+                await Task.Delay(0); 
             }
         }
 
