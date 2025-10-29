@@ -9,7 +9,12 @@
         <form method="post" asp-action="Login">
             @Html.AntiForgeryToken()
             <input type="email" name="email" placeholder="E-posta" required />
-            <input type="password" name="password" placeholder="Şifre" required />
+
+            <div class="password-wrapper">
+                <input type="password" name="password" placeholder="Şifre" required id="LoginPassword" />
+                <span class="toggle-password" onclick="toggleLoginPassword()">👁️</span>
+            </div>
+
             <a href="@Url.Action("SignUp", "LoginSignUp")" class="link">Kayıt Ol</a>
             <button type="submit">Giriş Yap</button>
         </form>
@@ -25,3 +30,16 @@
         }
     </div>
 </div>
+<script>
+    function toggleLoginPassword() {
+        const passwordInput = document.getElementById("LoginPassword");
+        const toggleIcon = passwordInput.nextElementSibling; // span
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleIcon.textContent = "🙈";
+        } else {
+            passwordInput.type = "password";
+            toggleIcon.textContent = "👁️";
+        }
+    }
+</script>

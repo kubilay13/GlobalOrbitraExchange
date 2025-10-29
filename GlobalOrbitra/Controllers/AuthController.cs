@@ -1,9 +1,6 @@
 ﻿using GlobalOrbitra.Db;
-using GlobalOrbitra.Models.MailModel;
 using GlobalOrbitra.Services.MailService;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using System.Net.Mail;
 
 namespace GlobalOrbitra.Controllers
 {

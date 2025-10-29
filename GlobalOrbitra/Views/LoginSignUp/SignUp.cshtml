@@ -7,9 +7,15 @@
         <h1>Kayıt Ol</h1>
         <form asp-action="SignUpMethod" method="post">
             @Html.AntiForgeryToken()
+
             <input type="text" placeholder="Kullanıcı Adı" required asp-for="Username" />
             <input type="email" placeholder="E-posta" required asp-for="Email" />
-            <input type="password" placeholder="Şifre" required asp-for="PasswordHash" />
+
+            <div class="password-wrapper">
+                <input type="password" id="PasswordHash" placeholder="Şifre (en az 8 karakter)" minlength="8" required asp-for="PasswordHash" /> <span class="toggle-password" onclick="togglePassword()">👁️</span>
+               
+            </div>
+
             <a href="@Url.Action("Login", "LoginSignUp")" class="link">Giriş Yap</a>
             <button type="submit">Kayıt Ol</button>
         </form>
@@ -25,3 +31,17 @@
         }
     </div>
 </div>
+
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById("PasswordHash");
+        const toggleIcon = document.querySelector(".toggle-password");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleIcon.textContent = "🙈";
+        } else {
+            passwordInput.type = "password";
+            toggleIcon.textContent = "👁️";
+        }
+    }
+</script>

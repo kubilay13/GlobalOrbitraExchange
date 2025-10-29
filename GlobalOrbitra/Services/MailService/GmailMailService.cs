@@ -38,6 +38,21 @@ namespace GlobalOrbitra.Services.MailService
                 return false; // Hata
             }
         }
-
+        public async Task<bool> SendLoginwarning(string toEmail , string otp)
+        { 
+                var mail = new MailMessage();
+                mail.To.Add(toEmail);
+                mail.From = new MailAddress(_smtpUser);
+                mail.Subject = "Hesabınızda Giriş Yapıldı!";
+                mail.Body = $"Hesabınıza Giriş Yapıldı Eğer bu siz değilseniz, lütfen hesabınızı korumak için gerekli önlemleri alın";
+                mail.IsBodyHtml = false;
+                using (var smtp = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    smtp.Credentials = new NetworkCredential(_smtpUser, _smtpAppPassword);
+                    smtp.EnableSsl = true;
+                    await smtp.SendMailAsync(mail);
+                }
+                return true; 
+        }
     }
 }

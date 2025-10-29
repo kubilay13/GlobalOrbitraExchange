@@ -44,8 +44,25 @@ namespace GlobalOrbitra.Controllers
         public async Task<IActionResult> SignUpMethod(UserModel model)
         {
             if (!ModelState.IsValid)
-                return BadRequest("Model geçersiz");
+                return View(model);
 
+            bool UsernameExists = _appDbContext.UserModels.Any(u => u.Username == model.Username);
+            bool UserEmailExists = _appDbContext.UserModels.Any(u=>u.Username==model.Username);
+
+            if(UsernameExists)
+            {
+                ModelState.AddModelError("Username","Bu kullanıcı adı zaten alınmış.");
+            }
+
+            if (UserEmailExists)
+            {
+                ModelState.AddModelError("Email", "Bu e-posta zaten kayıtlı.");
+            }
+
+            if (UsernameExists || UserEmailExists)
+            {
+                return View("SignUp", model); 
+            }
             // 1️⃣ Kullanıcı oluştur (henüz wallet yok)
             var user = new UserModel
             {
@@ -84,11 +101,9 @@ namespace GlobalOrbitra.Controllers
             return RedirectToAction("VerifyIndex");
         }
 
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(string email, string password)
+        public async Task<IActionResult> Login(string email, string password)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
@@ -115,6 +130,7 @@ namespace GlobalOrbitra.Controllers
             var principal = new ClaimsPrincipal(identity);
 
             HttpContext.SignInAsync("MyCookieAuth", principal);
+            await _gmailMailService.SendLoginwarning(user.Email, "Hesabınıza giriş yapıldı.");
 
             return RedirectToAction("Dashboard", "Dashboard");
         }

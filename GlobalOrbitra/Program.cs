@@ -32,7 +32,7 @@ builder.Services.AddHostedService<TronWalletBackgroundService>();
 
 builder.Services.AddSingleton(new GlobalOrbitra.Services.MailService.GmailMailService(
     "akdogankubilay431@gmail.com", // Mail Address
-    "cxaq slwo wgfp lsqw" // Mail App Password
+    "" // Mail App Password
 ));
 
 builder.Services.AddDbContext<AppDbContext>(options =>

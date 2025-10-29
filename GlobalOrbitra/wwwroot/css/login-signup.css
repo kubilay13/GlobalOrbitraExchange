@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 160px); /* header + footer varsa */
+    min-height: calc(100vh - 160px); 
     background: #121212;
     padding: 20px;
 }
@@ -90,4 +90,15 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+.password-wrapper {
+    position: relative;
+}
+.password-wrapper .toggle-password {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-75%);
+    cursor: pointer;
+    user-select: none;
 }
