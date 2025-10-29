@@ -11,6 +11,7 @@ namespace GlobalOrbitra.Models.UserModel
         public bool IsToken { get; set; }
         public int ChainId { get; set; }
         public  ChainModel Chain { get; set; }
+        public string LogoUrl { get; set; }
         public bool IsActive { get; set; } = true;
 
         public ICollection<UserWalletModel> UserWallets { get; set; } = new List<UserWalletModel>();
