@@ -1,6 +1,29 @@
-﻿
+﻿@model IEnumerable<GlobalOrbitra.Models.DTO.UserDto.WalletViewModel>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 <link href="~/css/dashboard.css" rel="stylesheet" />
+
+@{
+    var coinLogos = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["TRX"] = "https://cryptologos.cc/logos/tron-trx-logo.png",
+        ["USDT"] = "https://cryptologos.cc/logos/tether-usdt-logo.png",
+        ["BTC"] = "https://cryptologos.cc/logos/bitcoin-btc-logo.png",
+        ["ETH"] = "https://cryptologos.cc/logos/ethereum-eth-logo.png"
+    };
+
+    string GetLogoUrl(string symbol)
+    {
+        // Boş veya null gelirse default
+        if (string.IsNullOrWhiteSpace(symbol))
+            return "https://cryptologos.cc/logos/default.svg";
+
+        // Gereksiz parantezleri veya ekstra yazıları temizle
+        var cleanSymbol = symbol.Split('(')[0].Trim().ToUpperInvariant();
+
+        return coinLogos.ContainsKey(cleanSymbol) ? coinLogos[cleanSymbol] : "https://cryptologos.cc/logos/default.svg";
+    }
+}
 
 <body class="page-assets">
     <div class="container">
@@ -11,18 +34,22 @@
                 <h2>Estimated Balance</h2>
                 <span class="pnl">Today's PnL: -$0.00 (0.00%)</span>
             </div>
-            <div class="balance-value">0.00018789 BTC</div>
-            <div class="balance-sub">≈ $20.29</div>
+
+            <div class="balance-value">
+                @Model.Sum(w => w.Balance) TRX
+            </div>
+            <div class="balance-sub">
+                ≈ $@Model.Sum(w => w.Balance * 0.30m) <!-- TEST İÇİN  -->
+            </div>
 
             <div class="action-buttons">
-                <button onclick="location.href='/wallet/deposit'">Deposit</button>
-                <button onclick="location.href='/wallet/withdraw'">Withdraw</button>
+                <button onclick="location.href='/WidthdrawDeposit/Deposit'">Deposit</button>
+                <button onclick="location.href='/WidthdrawDeposit/Withdraw'">Withdraw</button>
                 <button onclick="location.href='/wallet/transfer'">Transfer</button>
                 <button onclick="location.href='/wallet/history'">History</button>
             </div>
         </div>
 
-        <!-- === VARLIKLAR TABLOSU === -->
         <div class="assets-card">
             <div class="assets-header">
                 <h2>My Assets</h2>
@@ -45,56 +72,28 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>
-                            <div class="coin">
-                                <img src="https://cryptologos.cc/logos/binance-usd-busd-logo.svg" alt="BUSD">
-                                <div>
-                                    <div class="coin-name">RWUSD</div>
-                                    <div class="coin-symbol">RWUSD</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>20.29467884</td>
-                        <td>$20.29</td>
-                        <td>--</td>
-                        <td class="positive">+0.00%</td>
-                    </tr>
+                    @foreach (var w in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="coin">
+                                    <img src="@w.LogoUrl" alt="@w.TokenSymbol" style="width:24px;height:24px;"
+                                         onerror="this.onerror=null;this.src='https://cryptologos.cc/logos/default.png';" />
 
-                    <tr>
-                        <td>
-                            <div class="coin">
-                                <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.svg" alt="BNB">
-                                <div>
-                                    <div class="coin-name">BNB</div>
-                                    <div class="coin-symbol">BNB</div>
+                                    <div>
+                                        <div class="coin-name">@w.TokenSymbol</div>
+                                        <div class="coin-symbol">@w.TokenSymbol</div>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td>0.0000165</td>
-                        <td>$0.00</td>
-                        <td>$1,067.69</td>
-                        <td class="positive">+0.00%</td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <div class="coin">
-                                <img src="https://cryptologos.cc/logos/shiba-inu-shib-logo.svg" alt="SHIB">
-                                <div>
-                                    <div class="coin-name">SHIBA INU</div>
-                                    <div class="coin-symbol">SHIB</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>0.11011808</td>
-                        <td>$0.00</td>
-                        <td>$0.00001</td>
-                        <td class="negative">-0.01%</td>
-                    </tr>
+                            </td>
+                            <td>@w.Balance</td>
+                            <td>$@(w.Balance * 0.30m)</td>
+                            <td>$0.30</td>
+                            <td class="positive">+0.00%</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
     </div>
 </body>
-

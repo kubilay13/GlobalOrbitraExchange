@@ -20,39 +20,53 @@ namespace GlobalOrbitra.Services.WalletService.WalletListenerService
             _dbContext = dbContext;
             _httpClient = new HttpClient();
         }
-        // TRX bakiyesini al
+        // TRX ve TRC20 bakiyelerini al
         public async Task<Dictionary<string, decimal>> GetTronBalancesAsync(string address)
         {
             var result = new Dictionary<string, decimal>(StringComparer.OrdinalIgnoreCase);
 
-            // API çağrısı
-            var url = $"https://nile.trongrid.io/v1/accounts/{address}";
-            var json = await _httpClient.GetFromJsonAsync<JsonElement>(url);
-
-            if (!json.TryGetProperty("data", out var data) || data.GetArrayLength() == 0)
-                return result;
-
-            var acct = data[0];
-
-            // TRX bakiyesi
-            if (acct.TryGetProperty("balance", out var bal))
-                result["TRX"] = bal.GetInt64() / 1_000_000m;
-
-            // assetV2 içindeki tokenlar
-            if (acct.TryGetProperty("assetV2", out var assets) && assets.ValueKind == JsonValueKind.Array)
+            // 1️⃣ TRX bakiyesi
+            var trxUrl = $"{_apiTronNileTestUrl}/v1/accounts/{address}";
+            var trxJson = await _httpClient.GetFromJsonAsync<JsonElement>(trxUrl);
+            if (trxJson.TryGetProperty("data", out var trxData) && trxData.GetArrayLength() > 0)
             {
-                foreach (var tok in assets.EnumerateArray())
-                {
-                    var symbol = tok.GetProperty("key").GetString() ?? "UNKNOWN";
-                    var amount = tok.GetProperty("value").GetDecimal();
+                var acct = trxData[0];
+                if (acct.TryGetProperty("balance", out var bal))
+                    result["TRX"] = bal.GetInt64() / 1_000_000m;
+            }
 
-                    // TRC20 token decimals genelde 6 → human readable
-                    result[symbol] = amount / 1_000_000m;
+            // 2️⃣ TRC20 token bakiyeleri (kontrat adresiyle filtreleme)
+            var trc20Url = $"{_apiTronNileTestUrl}/v1/accounts/{address}/transactions/trc20?only_confirmed=true&contract_address=TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf";
+            var trc20Json = await _httpClient.GetFromJsonAsync<JsonElement>(trc20Url);
+            if (trc20Json.TryGetProperty("data", out var trc20Txs))
+            {
+                foreach (var tx in trc20Txs.EnumerateArray())
+                {
+                    try
+                    {
+                        var toAddress = tx.GetProperty("to").GetString();
+                        if (!string.Equals(toAddress, address, StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        var valueStr = tx.GetProperty("value").GetString();
+                        var tokenInfo = tx.GetProperty("token_info");
+                        var tokenSymbol = tokenInfo.GetProperty("symbol").GetString();
+                        var tokenDecimals = tokenInfo.GetProperty("decimals").GetInt32();
+
+                        if (decimal.TryParse(valueStr, out var rawAmount))
+                        {
+                            var amount = rawAmount / (decimal)Math.Pow(10, tokenDecimals);
+                            result[tokenSymbol] = amount;
+                        }
+                    }
+                    catch { continue; }
                 }
             }
 
             return result;
         }
+
+
 
 
         public async Task CheckIncomingForUserAsync(UserWalletModel userWallet)

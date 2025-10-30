@@ -423,12 +423,20 @@
                         </a>
 
                         <div id="userMenu" class="dropdown-menu">
-                            <a href="/LoginSignUp/SignUp">Kayıt Ol</a>
-                            <a href="/LoginSignUp/Login">Giriş Yap</a>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <form asp-controller="LoginSignUp" asp-action="Logout" method="post" style="margin:0;">
+                                    <button type="submit">Çıkış Yap</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <a href="/LoginSignUp/SignUp">Kayıt Ol</a>
+                                <a href="/LoginSignUp/Login">Giriş Yap</a>
+                            }
                         </div>
                     </div>
                 </div>
-                   
             </div>
         </div>
     </header>

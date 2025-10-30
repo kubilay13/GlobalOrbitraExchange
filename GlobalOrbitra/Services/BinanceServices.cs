@@ -100,6 +100,9 @@ namespace GlobalOrbitra.Services
                 case "SOLUSDT":
                     OnSolPriceUpdated?.Invoke(price);
                     break;
+                case "TRXUSDT":
+                    OnTrxPriceUpdated?.Invoke(price);
+                    break;
             }
         }
     }

@@ -11,8 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthentication("MyCookieAuth")
     .AddCookie("MyCookieAuth", options =>
     {
-        options.LoginPath = "/Account/Login";  // giriþ yapýlmadýysa buraya yönlendir
-        options.AccessDeniedPath = "/Account/AccessDenied"; // yetkisiz eriþim olursa
+        options.LoginPath = "/LoginSignUp/Login";
+        options.AccessDeniedPath = "/LoginSignUp/AccessDenied";
     });
 
 // Add services to the container.

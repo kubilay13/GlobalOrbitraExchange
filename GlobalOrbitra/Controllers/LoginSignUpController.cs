@@ -39,7 +39,13 @@ namespace GlobalOrbitra.Controllers
         {
             return View();
         }
-
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync("MyCookieAuth");
+            return RedirectToAction("Login", "LoginSignUp");
+        }
         [HttpPost]
         public async Task<IActionResult> SignUpMethod(UserModel model)
         {
@@ -47,9 +53,9 @@ namespace GlobalOrbitra.Controllers
                 return View(model);
 
             bool UsernameExists = _appDbContext.UserModels.Any(u => u.Username == model.Username);
-            bool UserEmailExists = _appDbContext.UserModels.Any(u=>u.Username==model.Username);
+            bool UserEmailExists = _appDbContext.UserModels.Any(u => u.Email == model.Email);
 
-            if(UsernameExists)
+            if (UsernameExists)
             {
                 ModelState.AddModelError("Username","Bu kullanıcı adı zaten alınmış.");
             }
@@ -122,14 +128,15 @@ namespace GlobalOrbitra.Controllers
 
             var claims = new List<Claim>
             {
-               new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-               new Claim(ClaimTypes.Email, user.Email)
+                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                 new Claim(ClaimTypes.Email, user.Email),
+                 new Claim(ClaimTypes.Name, user.Username)
             };
 
-            var identity = new ClaimsIdentity(claims, "MyCookieAuth");
+            var identity = new ClaimsIdentity(claims, "login");
             var principal = new ClaimsPrincipal(identity);
 
-            HttpContext.SignInAsync("MyCookieAuth", principal);
+            await HttpContext.SignInAsync(principal);
             await _gmailMailService.SendLoginwarning(user.Email, "Hesabınıza giriş yapıldı.");
 
             return RedirectToAction("Dashboard", "Dashboard");
