@@ -69,5 +69,9 @@ namespace GlobalOrbitra.Controllers
 
             return View(vmList);
         }
+        public IActionResult TransactionHistory()
+        {
+            return View();
+        }
     }
 }

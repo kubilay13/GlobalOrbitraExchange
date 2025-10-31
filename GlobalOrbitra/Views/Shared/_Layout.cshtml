@@ -7,7 +7,9 @@
     @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />  *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <style>
-        /* Dark/Light Mode CSS Variables */
+        /* =========================
+           Dark/Light Mode Variables
+        ========================= */
         :root {
             /* Light Theme Colors */
             --bg-color: #ffffff;
@@ -52,14 +54,30 @@
             --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
-        /* Base Styles */
-        body {
+        /* =========================
+           Base Styles
+        ========================= */
+        body, header, footer, .card-analytics, .trend-card, .instruction-card {
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background-color 0.3s ease, color 0.3s ease;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
-        /* Header Styles */
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+            a:hover {
+                color: var(--link-color);
+            }
+
+        /* =========================
+           Header
+        ========================= */
         .header {
             background-color: var(--header-bg);
             border-bottom: 1px solid var(--border-color);
@@ -77,18 +95,13 @@
                 color: var(--link-color);
             }
 
-        .btn-outline {
-            border-color: var(--border-color);
-            color: var(--text-color);
-            background-color: var(--btn-bg);
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-            .btn-outline:hover {
-                background-color: var(--link-color);
-                color: white;
-            }
-
-        /* Theme Toggle Button */
+        /* Theme Toggle */
         .theme-toggle {
             background: none;
             border: none;
@@ -98,7 +111,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-left: 10px;
             color: var(--text-color);
             transition: background-color 0.3s ease;
         }
@@ -113,13 +125,9 @@
                 fill: currentColor;
             }
 
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Hero Section */
+        /* =========================
+           Hero Section
+        ========================= */
         .hero {
             background: var(--hero-bg);
             color: white;
@@ -129,164 +137,100 @@
             color: white;
         }
 
-        /* Trend Section */
-        .trend {
+        /* =========================
+           Cards & Sections
+        ========================= */
+        .trend, .instruction, .app {
             background-color: var(--section-bg);
         }
 
-        .trend-card {
-            background-color: var(--trend-card-bg);
+        .trend-card, .instruction-card, .wallet-options {
+            background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow);
         }
 
-        .card-title, .card-value {
+        .card-title, .card-value, .card-text, .section-title, .section-text, .list-title, .item-text, .item-title, .coin-name, .current-price, .user-icon {
             color: var(--text-color);
         }
 
+        /* Badges */
         .badge.green {
             background-color: var(--badge-green);
             color: white;
-        }
-
-        /* Market Section */
-        .market {
-            background-color: var(--bg-color);
-        }
-
-        .market-table {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-        }
-
-        .table-head {
-            background-color: var(--table-header-bg);
-        }
-
-        .table-heading {
-            color: var(--text-color);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .table-row {
-            border-bottom: 1px solid var(--border-color);
-        }
-
-            .table-row:nth-child(even) {
-                background-color: var(--table-row-even);
-            }
-
-            .table-row:hover {
-                background-color: var(--table-row-hover);
-            }
-
-        .table-data {
-            color: var(--text-color);
-        }
-
-        .coin-name {
-            color: var(--text-color);
-        }
-
-        .current-price {
-            color: var(--text-color);
         }
 
         .last-update.green {
             color: var(--badge-green);
         }
 
-        /* Instruction Section */
-        .instruction {
-            background-color: var(--section-bg);
-        }
-
-        .instruction-card {
+        /* =========================
+           Market Table
+        ========================= */
+        .market-table {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            box-shadow: var(--shadow);
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        .card-title, .card-text {
+        .table-head {
+            background-color: var(--table-header-bg);
+        }
+
+        .table-heading, .table-data {
             color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px;
         }
 
-        /* About Section */
-        .about {
-            background-color: var(--bg-color);
+        .table-row:nth-child(even) {
+            background-color: var(--table-row-even);
         }
 
-        .section-title, .section-text, .list-title, .item-text {
-            color: var(--text-color);
+        .table-row:hover {
+            background-color: var(--table-row-hover);
         }
 
-        /* App Section */
-        .app {
-            background-color: var(--section-bg);
-        }
-
-        .item-title {
-            color: var(--text-color);
-        }
-
-        /* Footer Styles */
-        .footer {
-            background-color: var(--footer-bg);
-            color: var(--text-color);
-        }
-
-        .footer-brand, .footer-list, .footer-contact-link {
-            color: var(--text-color);
-        }
-
-        .footer-link {
-            color: var(--text-color);
-        }
-
-            .footer-link:hover {
-                color: var(--link-color);
-            }
-
-        .footer-list-title {
-            color: var(--text-color);
-        }
-
-        .copyright {
-            color: var(--text-color);
-        }
-
-        .social-link {
-            color: var(--text-color);
-        }
-
-            .social-link:hover {
-                color: var(--link-color);
-            }
-
-        /* Wallet Options Modal */
-        .wallet-options {
-            background-color: var(--card-bg);
-            color: var(--text-color);
+        /* =========================
+           Buttons
+        ========================= */
+        .btn-outline {
             border: 1px solid var(--border-color);
-            box-shadow: var(--shadow);
+            color: var(--text-color);
+            background-color: var(--btn-bg);
+            padding: 6px 12px;
+            cursor: pointer;
         }
 
-            .wallet-options button {
-                background-color: var(--btn-bg);
-                color: var(--btn-text);
-                border: 1px solid var(--border-color);
+            .btn-outline:hover {
+                background-color: var(--link-color);
+                color: white;
             }
 
-                .wallet-options button:hover {
-                    background-color: var(--link-color);
-                    color: white;
-                }
+        .btn-primary {
+            background-color: var(--link-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
 
-        /* Tab Styles */
+            .btn-primary:hover {
+                opacity: 0.9;
+            }
+
+        /* Add to Favorite */
+        .add-to-fav:hover {
+            color: #ffd700;
+        }
+
+        /* Tabs */
         .tab-btn {
             background-color: var(--btn-bg);
             color: var(--text-color);
             border: 1px solid var(--border-color);
+            padding: 6px 12px;
         }
 
             .tab-btn.active {
@@ -294,47 +238,71 @@
                 color: white;
             }
 
-        /* Add to Favorite Button */
-        .add-to-fav {
-            color: var(--text-color);
+        /* =========================
+           User Menu Dropdown
+        ========================= */
+        .user-menu-wrapper {
+            position: relative;
         }
 
-            .add-to-fav:hover {
-                color: #ffd700;
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            min-width: 120px;
+            box-shadow: var(--shadow);
+            z-index: 100;
+        }
+
+            .dropdown-menu a, .dropdown-menu button {
+                display: block;
+                width: 100%;
+                padding: 10px;
+                text-align: left;
+                border: none;
+                background: none;
+                color: var(--text-color);
+                cursor: pointer;
             }
 
-        /* Button Primary */
-        .btn-primary {
-            background-color: var(--link-color);
-            color: white;
-            border: none;
+                .dropdown-menu a:hover, .dropdown-menu button:hover {
+                    background-color: var(--table-row-hover);
+                }
+
+        /* =========================
+           Footer
+        ========================= */
+        .footer {
+            background-color: var(--footer-bg);
+            color: var(--text-color);
+            padding: 20px 0;
         }
 
-            .btn-primary:hover {
-                opacity: 0.9;
+        .footer-link, .footer-contact-link, .footer-brand, .footer-list-title, .copyright, .social-link {
+            color: var(--text-color);
+        }
+
+            .footer-link:hover, .social-link:hover {
+                color: var(--link-color);
             }
 
-        /* Section Titles */
-        .h2.section-title {
-            color: var(--text-color);
-        }
-
-        /* Card Analytics */
-        .card-analytics {
-            color: var(--text-color);
-        }
-
+        /* =========================
+           Icons
+        ========================= */
         .user-icon {
             display: inline-flex;
             align-items: center;
             cursor: pointer;
-            color: var(--text-color);
             transition: color 0.3s ease, transform 0.2s ease;
         }
 
             .user-icon:hover {
-                color: #ffffff; /* Hoverda beyaz */
-                transform: scale(1.1); /* Hafif büyüme efekti */
+                color: #ffffff;
+                transform: scale(1.1);
             }
 
             .user-icon ion-icon {
@@ -342,34 +310,10 @@
                 font-size: 24px;
             }
 
-       
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 40px; /* ikonun altına gelsin */
-            right: 0;
-            background: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            min-width: 120px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 100;
-        }
-
-        .dropdown-menu a {
-            display: block;
-            padding: 10px;
-            text-decoration: none;
-            color: #333;
-        }
-
-            .dropdown-menu a:hover {
-                background-color: #f0f0f0;
-            }
     </style>
 </head>
+  @RenderBody()
 <body>
-    @RenderBody()
     <header class="header" data-header>
         <div class="container">
             <a href="#" class="logo">
@@ -441,8 +385,7 @@
         </div>
     </header>
 
-      <footer class="footer">
-
+    <footer class="footer">
         <div class="footer-top" data-section>
             <div class="container">
 
