@@ -27,7 +27,7 @@
 
 /* === ÜST BALANCE KARTI === */
 .balance-card {
-    background-color: #12161c;
+    background-color: #0B1220;
     border: 1px solid #1e2329;
     border-radius: 12px;
     padding: 24px;
@@ -88,7 +88,7 @@
 
 /* === VARLIKLAR TABLOSU === */
 .assets-card {
-    background-color: #12161c;
+    background-color: #0B1220;
     border: 1px solid #1e2329;
     border-radius: 12px;
     padding: 20px;
@@ -179,6 +179,7 @@ td {
     .hide-small-assets input {
         margin-right: 4px;
     }
+
 .user-wallets {
     margin-top: 20px;
     background: rgba(0,0,0,0.05);

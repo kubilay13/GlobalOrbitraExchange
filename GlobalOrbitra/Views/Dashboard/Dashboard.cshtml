@@ -4,24 +4,13 @@
 <link href="~/css/dashboard.css" rel="stylesheet" />
 
 @{
-    var coinLogos = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    string GetLogoPath(string symbol)
     {
-        ["TRX"] = "https://cryptologos.cc/logos/tron-trx-logo.png",
-        ["USDT"] = "https://cryptologos.cc/logos/tether-usdt-logo.png",
-        ["BTC"] = "https://cryptologos.cc/logos/bitcoin-btc-logo.png",
-        ["ETH"] = "https://cryptologos.cc/logos/ethereum-eth-logo.png"
-    };
-
-    string GetLogoUrl(string symbol)
-    {
-        // Boş veya null gelirse default
         if (string.IsNullOrWhiteSpace(symbol))
-            return "https://cryptologos.cc/logos/default.svg";
+            return Url.Content("~/images/default.svg");
 
-        // Gereksiz parantezleri veya ekstra yazıları temizle
-        var cleanSymbol = symbol.Split('(')[0].Trim().ToUpperInvariant();
-
-        return coinLogos.ContainsKey(cleanSymbol) ? coinLogos[cleanSymbol] : "https://cryptologos.cc/logos/default.svg";
+        var cleanSymbol = symbol.Split('(')[0].Trim().ToLowerInvariant();
+        return Url.Content($"~/images/{cleanSymbol}.svg");
     }
 }
 
@@ -36,15 +25,15 @@
             </div>
 
             <div class="balance-value">
-                @Model.Sum(w => w.Balance) TRX
+                $@(Model.Sum(w => w.Balance).ToString("N2", System.Globalization.CultureInfo.InvariantCulture))
             </div>
             <div class="balance-sub">
-                ≈ $@Model.Sum(w => w.Balance * 0.30m) <!-- TEST İÇİN  -->
+                ≈ $@(Model.Sum(w => w.Balance * 0.30m).ToString("N2", System.Globalization.CultureInfo.InvariantCulture)) <!-- TEST için -->
             </div>
 
             <div class="action-buttons">
                 <button onclick="location.href='/WidthdrawDeposit/Deposit'">Deposit</button>
-                <button onclick="location.href='/WidthdrawDeposit/Widthdraw'">Withdraw</button>
+                <button onclick="location.href='/WidthdrawDeposit/Withdraw'">Withdraw</button>
                 <button onclick="location.href='/Dashboard/TransactionHistory'">History</button>
             </div>
         </div>
@@ -76,8 +65,10 @@
                         <tr>
                             <td>
                                 <div class="coin">
-                                    <img src="@w.LogoUrl" alt="@w.TokenSymbol" style="width:24px;height:24px;"
-                                         onerror="this.onerror=null;this.src='https://cryptologos.cc/logos/default.png';" />
+                                    <img src="@GetLogoPath(w.TokenSymbol)"
+                                         alt="@w.TokenSymbol"
+                                         style="width:24px;height:24px;"
+                                         onerror="this.onerror=null;this.src='@Url.Content("~/img/coins/default.svg")';" />
 
                                     <div>
                                         <div class="coin-name">@w.TokenSymbol</div>
@@ -85,8 +76,8 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>@w.Balance</td>
-                            <td>$@(w.Balance * 0.30m)</td>
+                            <td>@w.Balance.ToString("N4", System.Globalization.CultureInfo.InvariantCulture)</td>
+                            <td>$@(w.Balance.ToString("N2", System.Globalization.CultureInfo.InvariantCulture))</td>
                             <td>$0.30</td>
                             <td class="positive">+0.00%</td>
                         </tr>

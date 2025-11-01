@@ -1,4 +1,5 @@
-﻿<link href="~/css/transaction.css" rel="stylesheet" />
+﻿@model List<GlobalOrbitra.Models.DTO.UserDto.TransactionViewModel>
+<link href="~/css/transaction.css" rel="stylesheet" />
 
 <body>
     <div class="container">
@@ -9,8 +10,7 @@
                 <select id="typeFilter">
                     <option value="all">Tümü</option>
                     <option value="deposit">Deposit</option>
-                    <option value="withdraw">Withdraw</option>
-                    <option value="trade">Trade</option>
+                    <option value="withdrawal">Withdrawal</option>
                 </select>
                 <label class="muted">Baş:</label>
                 <input id="fromDate" type="date" />
@@ -38,7 +38,7 @@
                             <th data-key="fee">Ücret</th>
                             <th data-key="status">Durum</th>
                             <th data-key="txid">TXID</th>
-                            <th data-key="fromto">Kimden/Kime</th>
+                            <th data-key="fromto">Adres</th> <!-- Değişti: Kimden/Kime -> Adres -->
                             <th>İşlem</th>
                         </tr>
                     </thead>
@@ -64,139 +64,199 @@
     </div>
 
     <script>
-        // === MOCK DATA ===
-        const mockData = (() => {
-          const types = ['deposit','withdraw','trade'];
-          const assets = ['BTC','ETH','USDT','XRP','ADA'];
-          const statuses = ['completed','pending','failed'];
-          const rows = [];
-          const now = Date.now();
-          for(let i=0;i<137;i++){
-            const t = types[Math.floor(Math.random()*types.length)];
-            const a = assets[Math.floor(Math.random()*assets.length)];
-            const amt = (Math.random()*3 + Math.pow(1.2, (i%8)) ).toFixed(6);
-            const fee = (Math.random()*0.01).toFixed(6);
-            const ts = new Date(now - i*1000*60*60*6).toISOString();
-            rows.push({
-              id: 'tx_'+(100000+i),
-              date: ts,
-              type: t,
-              asset: a,
-              amount: amt,
-              fee: fee,
-              status: statuses[Math.floor(Math.random()*statuses.length)],
-              txid: Math.random().toString(36).slice(2,12)+i,
-              fromto: t==='deposit'? 'External → Wallet' : (t==='withdraw'? 'Wallet → External' : 'Wallet ↔ Wallet')
-            });
-          }
-          return rows;
-        })();
+        // Gerçek veriyi kullan
+        const mockData = @Html.Raw(Json.Serialize(Model));
 
         // === STATE ===
-        let state = { data: mockData, filtered: [], sortKey: 'date', sortDir: -1, page: 1, pageSize: 10 };
+        let state = {
+            data: mockData || [],
+            filtered: [],
+            sortKey: 'date',
+            sortDir: -1,
+            page: 1,
+            pageSize: 10
+        };
 
-        function formatDate(iso){ return new Date(iso).toLocaleString(); }
+        function formatDate(iso){
+            return new Date(iso).toLocaleString('tr-TR');
+        }
+
+        function formatAmount(amount) {
+            return parseFloat(amount).toFixed(6);
+        }
+
+        function getExplorerUrl(network, txHash) {
+            // Network'e göre explorer URL'leri
+            const explorers = {
+                'TRON': 'https://tronscan.org/#/transaction/',
+                'ETH': 'https://etherscan.io/tx/',
+                'BSC': 'https://bscscan.com/tx/'
+            };
+            return (explorers[network] || 'https://explorer.example.com/tx/') + txHash;
+        }
 
         function render(){
-          const tbody = document.querySelector('#txTable tbody');
-          const {filtered,page,pageSize,sortKey,sortDir} = state;
-          filtered.sort((a,b)=>{
-            if(sortKey==='amount'||sortKey==='fee') return (parseFloat(a[sortKey])-parseFloat(b[sortKey]))*sortDir;
-            if(sortKey==='date') return (new Date(a.date)-new Date(b.date))*sortDir;
-            return String(a[sortKey]).localeCompare(String(b[sortKey]))*sortDir;
-          });
+            const tbody = document.querySelector('#txTable tbody');
+            const {filtered, page, pageSize, sortKey, sortDir} = state;
 
-          const total = filtered.length;
-          const pages = Math.max(1,Math.ceil(total/pageSize));
-          state.page = Math.min(page,pages);
-          const start = (state.page-1)*pageSize;
-          const pageItems = filtered.slice(start,start+pageSize);
-
-          tbody.innerHTML = pageItems.map(item=>`
-            <tr>
-              <td>${formatDate(item.date)}</td>
-              <td><span class="pill ${item.type}">${item.type}</span></td>
-              <td>${item.asset}</td>
-              <td>${item.amount}</td>
-              <td class="muted">${item.fee}</td>
-              <td class="muted">${item.status}</td>
-              <td><a href="#" data-txid="${item.txid}" class="txlink">${item.txid.slice(0,8)}…</a></td>
-              <td class="muted">${item.fromto}</td>
-              <td><button data-copy="${item.txid}">Kopyala</button></td>
-            </tr>
-          `).join('');
-
-          document.getElementById('totalCount').textContent = total;
-          document.getElementById('pageInfo').textContent = `${state.page} / ${pages}`;
-
-          document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click',e=>{
-            const tx = e.currentTarget.dataset.copy;
-            navigator.clipboard?.writeText(tx).then(()=>{
-              e.currentTarget.textContent='Kopyalandı';
-              setTimeout(()=> e.currentTarget.textContent='Kopyala',900);
+            // Sıralama
+            filtered.sort((a,b)=>{
+                if(sortKey==='amount'||sortKey==='fee')
+                    return (parseFloat(a[sortKey])-parseFloat(b[sortKey]))*sortDir;
+                if(sortKey==='date')
+                    return (new Date(a.date)-new Date(b.date))*sortDir;
+                return String(a[sortKey]).localeCompare(String(b[sortKey]))*sortDir;
             });
-          }));
 
-          document.querySelectorAll('.txlink').forEach(a=>a.addEventListener('click',e=>{
-            e.preventDefault();
-            const txid = e.currentTarget.dataset.txid;
-            window.open('https://explorer.example.com/tx/'+txid,'_blank');
-          }));
+            const total = filtered.length;
+            const pages = Math.max(1,Math.ceil(total/pageSize));
+            state.page = Math.min(page,pages);
+            const start = (state.page-1)*pageSize;
+            const pageItems = filtered.slice(start,start+pageSize);
+
+            tbody.innerHTML = pageItems.map(item=>`
+                <tr>
+                    <td>${formatDate(item.date)}</td>
+                    <td><span class="pill ${item.type}">${item.type}</span></td>
+                    <td>${item.asset}</td>
+                    <td>${formatAmount(item.amount)}</td>
+                    <td class="muted">${formatAmount(item.fee)}</td>
+                    <td class="status-${item.status.toLowerCase()}">${item.status}</td>
+                    <td>
+                        ${item.txHash ?
+                            `<a href="#" data-txid="${item.txHash}" class="txlink">${item.txHash}</a>` :
+                            '<span class="muted">-</span>'
+                        }
+                    </td>
+                    <td class="muted">${item.fromTo}</td>
+                    <td>
+                        ${item.txHash ?
+                            `<button data-copy="${item.txHash}">Kopyala</button>` :
+                            '<button disabled>Kopyala</button>'
+                        }
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('pageInfo').textContent = `${state.page} / ${pages}`;
+
+            // Event listeners
+            document.querySelectorAll('[data-copy]').forEach(btn=>{
+                btn.addEventListener('click',e=>{
+                    const tx = e.currentTarget.dataset.copy;
+                    navigator.clipboard?.writeText(tx).then(()=>{
+                        e.currentTarget.textContent='Kopyalandı';
+                        setTimeout(()=> e.currentTarget.textContent='Kopyala',900);
+                    });
+                });
+            });
+
+            document.querySelectorAll('.txlink').forEach(a=>{
+                a.addEventListener('click',e=>{
+                    e.preventDefault();
+                    const txid = e.currentTarget.dataset.txid;
+                    // Network bilgisi yoksa TRON varsayalım
+                    window.open(getExplorerUrl('TRON', txid),'_blank');
+                });
+            });
         }
 
         function applyFilters(){
-          const q = document.getElementById('search').value.trim().toLowerCase();
-          const type = document.getElementById('typeFilter').value;
-          const from = document.getElementById('fromDate').value;
-          const to = document.getElementById('toDate').value;
+            const q = document.getElementById('search').value.trim().toLowerCase();
+            const type = document.getElementById('typeFilter').value;
+            const from = document.getElementById('fromDate').value;
+            const to = document.getElementById('toDate').value;
 
-          state.filtered = state.data.filter(r=>{
-            if(type!=='all' && r.type!==type) return false;
-            if(from && new Date(r.date)<new Date(from)) return false;
-            if(to && new Date(r.date)>new Date(to+'T23:59:59')) return false;
-            if(!q) return true;
-            return [r.txid,r.asset,r.fromto,r.type,r.status].join(' ').toLowerCase().includes(q);
-          });
-          state.page=1;
-          render();
+            state.filtered = state.data.filter(r=>{
+                if(type!=='all' && r.type!==type) return false;
+                if(from && new Date(r.date)<new Date(from)) return false;
+                if(to && new Date(r.date)>new Date(to+'T23:59:59')) return false;
+                if(!q) return true;
+
+                return [
+                    r.txHash,
+                    r.asset,
+                    r.fromTo,
+                    r.type,
+                    r.status,
+                    r.walletAddress,
+                    r.senderAddress
+                ].join(' ').toLowerCase().includes(q);
+            });
+            state.page=1;
+            render();
         }
 
         function exportCSV(){
-          const rows = state.filtered.map(r=>[r.date,r.type,r.asset,r.amount,r.fee,r.status,r.txid,r.fromto]);
-          const header = ['date','type','asset','amount','fee','status','txid','fromto'];
-          const csv = [header.join(','), ...rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(','))].join('\n');
-          const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href=url;
-          a.download='transfer_history.csv';
-          a.click();
-          URL.revokeObjectURL(url);
+            const rows = state.filtered.map(r=>[
+                r.date, r.type, r.asset, r.amount, r.fee, r.status, r.txHash, r.fromTo
+            ]);
+            const header = ['Tarih','Tür','Varlık','Miktar','Ücret','Durum','TX Hash','Adres'];
+            const csv = [header.join(','), ...rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(','))].join('\n');
+            const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href=url;
+            a.download='transaction_history.csv';
+            a.click();
+            URL.revokeObjectURL(url);
         }
 
-        function throttle(fn,wait){let t=0;return function(...a){const now=Date.now(); if(now-t>wait){t=now;fn.apply(this,a);}}}
+        function throttle(fn,wait){
+            let t=0;
+            return function(...a){
+                const now=Date.now();
+                if(now-t>wait){
+                    t=now;
+                    fn.apply(this,a);
+                }
+            }
+        }
 
         function init(){
-          document.getElementById('pageSize').value=state.pageSize;
-          document.getElementById('search').addEventListener('input',throttle(applyFilters,250));
-          document.getElementById('typeFilter').addEventListener('change',applyFilters);
-          document.getElementById('fromDate').addEventListener('change',applyFilters);
-          document.getElementById('toDate').addEventListener('change',applyFilters);
-          document.getElementById('exportBtn').addEventListener('click',exportCSV);
-          document.getElementById('prevBtn').addEventListener('click',()=>{state.page=Math.max(1,state.page-1); render();});
-          document.getElementById('nextBtn').addEventListener('click',()=>{state.page++; render();});
-          document.getElementById('pageSize').addEventListener('change',e=>{state.pageSize=parseInt(e.target.value); state.page=1; render();});
-          document.querySelectorAll('th[data-key]').forEach(th=>th.addEventListener('click',()=>{
-            const key=th.dataset.key;
-            if(state.sortKey===key) state.sortDir=-state.sortDir; else { state.sortKey=key; state.sortDir=-1 }
-            document.querySelectorAll('th[data-key]').forEach(h=>{
-              h.textContent=h.dataset.key===state.sortKey ? h.dataset.key + (state.sortDir===-1 ? ' ▼':' ▲') : h.dataset.key;
+            document.getElementById('pageSize').value=state.pageSize;
+            document.getElementById('search').addEventListener('input',throttle(applyFilters,250));
+            document.getElementById('typeFilter').addEventListener('change',applyFilters);
+            document.getElementById('fromDate').addEventListener('change',applyFilters);
+            document.getElementById('toDate').addEventListener('change',applyFilters);
+            document.getElementById('exportBtn').addEventListener('click',exportCSV);
+            document.getElementById('prevBtn').addEventListener('click',()=>{
+                state.page=Math.max(1,state.page-1);
+                render();
             });
-            render();
-          }));
-          applyFilters();
+            document.getElementById('nextBtn').addEventListener('click',()=>{
+                state.page++;
+                render();
+            });
+            document.getElementById('pageSize').addEventListener('change',e=>{
+                state.pageSize=parseInt(e.target.value);
+                state.page=1;
+                render();
+            });
+
+            document.querySelectorAll('th[data-key]').forEach(th=>{
+                th.addEventListener('click',()=>{
+                    const key=th.dataset.key;
+                    if(state.sortKey===key)
+                        state.sortDir=-state.sortDir;
+                    else {
+                        state.sortKey=key;
+                        state.sortDir=-1;
+                    }
+                    document.querySelectorAll('th[data-key]').forEach(h=>{
+                        h.textContent = h.dataset.key +
+                            (h.dataset.key===state.sortKey ?
+                                (state.sortDir===-1 ? ' ▼' : ' ▲') : '');
+                    });
+                    render();
+                });
+            });
+
+            applyFilters();
         }
 
-        init();
+        // Sayfa yüklendiğinde init çağır
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>

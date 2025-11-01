@@ -2,6 +2,7 @@
 using GlobalOrbitra.Models.DTO.UserDto;
 using GlobalOrbitra.Services.WalletService.WalletListenerService;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace GlobalOrbitra.Controllers
@@ -10,22 +11,13 @@ namespace GlobalOrbitra.Controllers
     {
         private readonly AppDbContext _appDbContext;
         private readonly TronWalletListenerService _tronWalletListenerService;
-        private readonly Dictionary<string, string> _coinLogos = new()
-        {
-            ["TRX"] = "https://cryptologos.cc/logos/tron-trx-logo.png",
-            ["USDT"] = "https://cryptologos.cc/logos/tether-usdt-logo.png",
-            ["BTC"] = "https://cryptologos.cc/logos/bitcoin-btc-logo.png",
-            ["ETH"] = "https://cryptologos.cc/logos/ethereum-eth-logo.png"
-        };
+
         public DashboardController(AppDbContext appDbContext,TronWalletListenerService tronWalletListenerService)
         {
             _tronWalletListenerService = tronWalletListenerService;
             _appDbContext = appDbContext;
         }
-        private string GetLogoUrl(string symbol)
-        {
-            return _coinLogos.ContainsKey(symbol) ? _coinLogos[symbol] : "https://cryptologos.cc/logos/default.svg";
-        }
+
         public async Task<IActionResult> Dashboard()
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -61,7 +53,6 @@ namespace GlobalOrbitra.Controllers
                         Network = wallet.Network,
                         TokenSymbol = kv.Key,
                         Balance = kv.Value,
-                        LogoUrl = GetLogoUrl(kv.Key) // Logo ekle
                         //price eklenecek
                     });
                 }
@@ -69,9 +60,39 @@ namespace GlobalOrbitra.Controllers
 
             return View(vmList);
         }
-        public IActionResult TransactionHistory()
+        public async Task<IActionResult> TransactionHistory()
         {
-            return View();
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            // Kullanıcının cüzdan adreslerini al
+            var userWallets = await _appDbContext.UserWalletModels
+                .Where(w => w.UserId == userId)
+                .Select(w => w.Address)
+                .ToListAsync();
+
+            // Bu cüzdanlarla ilişkili transaction'ları getir
+            var transactions = await _appDbContext.AssetTransactionModels
+                .Include(t => t.Token)
+                .Where(t => t.UserId == userId || userWallets.Contains(t.WalletAddress) || userWallets.Contains(t.SenderAddress))
+                .OrderByDescending(t => t.CreatedAt)
+                .Select(t => new TransactionViewModel
+                {
+                    Id = t.Id,
+                    Date = t.CreatedAt,
+                    Type = t.Type,
+                    Asset = t.Token != null ? t.Token.Symbol : "UNKNOWN",
+                    Amount = t.Amount,
+                    Fee = t.Commission,
+                    Status = t.Status,
+                    TxHash = t.TxHash,
+                    // FromTo: Deposit ise gönderen adres (dış), Withdrawal ise alıcı adres (dış)
+                    FromTo = t.Type == "deposit" ? t.SenderAddress : t.WalletAddress,
+                    WalletAddress = t.WalletAddress,
+                    SenderAddress = t.SenderAddress
+                })
+                .ToListAsync();
+
+            return View(transactions);
         }
     }
 }
