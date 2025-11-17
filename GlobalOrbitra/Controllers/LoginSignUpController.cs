@@ -16,7 +16,6 @@ namespace GlobalOrbitra.Controllers
         private readonly GmailMailService _gmailMailService;
         private readonly WalletService _walletService;
 
-
         public LoginSignUpController(AppDbContext appDbContext,WalletService walletService, GmailMailService gmailMailService)
         {
             _walletService = walletService;
@@ -29,16 +28,31 @@ namespace GlobalOrbitra.Controllers
         {
             return View();
         }
-
         public IActionResult SignUp()
         {
             return View();
         }
-
         public IActionResult VerifyIndex()
         {
             return View();
         }
+        [HttpGet]
+        public IActionResult ResetPassword()
+        {
+            if (TempData["OtpVerified"] == null)
+                return RedirectToAction("Login");
+
+            ViewBag.UserId = TempData["UserId"];
+            TempData.Keep("UserId");
+            TempData.Keep("OtpVerified");
+            return View();
+        }
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -107,6 +121,7 @@ namespace GlobalOrbitra.Controllers
             return RedirectToAction("VerifyIndex");
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string email, string password)
@@ -142,6 +157,7 @@ namespace GlobalOrbitra.Controllers
             return RedirectToAction("Dashboard", "Dashboard");
         }
 
+
         [HttpGet]
         public IActionResult VerifyOtp()
         {
@@ -149,12 +165,16 @@ namespace GlobalOrbitra.Controllers
             ViewBag.Email = TempData["Email"];
             return View();
         }
+
+
         [HttpPost]
         public async Task<IActionResult> VerifyOtpPost(string email, string otp)
         {
-            email = email ?? TempData["Email"] as string;
+            email ??= TempData["Email"]?.ToString();
             var userId = Convert.ToInt32(TempData["UserId"]);
-            ViewBag.Email = email;
+
+            TempData.Keep("Email");
+            TempData.Keep("UserId");
 
             var otpRecord = await _appDbContext.OtpCodes
                 .Where(x => x.Email == email)
@@ -167,60 +187,35 @@ namespace GlobalOrbitra.Controllers
                 return View("VerifyIndex");
             }
 
-            var hashCheck = OtpHelper.HashOtp(otp, otpRecord.Salt);
-            if (hashCheck != otpRecord.OtpHash)
+            if (OtpHelper.HashOtp(otp, otpRecord.Salt) != otpRecord.OtpHash)
             {
                 ViewBag.Error = "Kod hatalı.";
                 return View("VerifyIndex");
             }
 
-            // ✅ OTP doğrulandı
             otpRecord.Consumed = true;
             await _appDbContext.SaveChangesAsync();
 
-            // ✅ Şimdi kullanıcıyı bul
+            // Şifre sıfırlama
+            if (otpRecord.Purpose == "forgot_password")
+            {
+                TempData["OtpVerified"] = true;
+                TempData["UserId"] = userId;
+                return RedirectToAction("ResetPassword");
+            }
+
+            // Kayıt → cüzdan oluştur
             var user = await _appDbContext.UserModels.FindAsync(userId);
-            if (user == null)
-            {
-                ViewBag.Error = "Kullanıcı bulunamadı.";
-                return View("VerifyIndex");
-            }
 
-            // ✅ Tokenları DB’den al (Seed data’da bunlar)
-            var trxToken = _appDbContext.TokenModels.First(t => t.Symbol == "TRX");
-            var ethToken = _appDbContext.TokenModels.First(t => t.Symbol == "ETH");
-            var bscToken = _appDbContext.TokenModels.First(t => t.Symbol == "BSC");
-            var solToken = _appDbContext.TokenModels.First(t => t.Symbol == "SOL");
-            var bttcToken = _appDbContext.TokenModels.First(t => t.Symbol == "BTT");
+            var tokens = _appDbContext.TokenModels.ToList();
 
-
-            if (trxToken == null || ethToken == null || bscToken == null || solToken == null || bttcToken== null)
-            {
-                ViewBag.Error = "Token verileri eksik. Lütfen sistem yöneticisine başvurun.";
-                return View("VerifyIndex");
-            }
-
-            // ✅ Cüzdan oluşturma
-            var tronWallet = _walletService.TronWallet;
-            var ethWallet = _walletService.EthWallet;
-            var bscWallet = _walletService.BscWallet;
-            var solWallet = _walletService.SolWallet;
-            var bttcwallet = _walletService.BttcWallet;
-
-            if (tronWallet == null || ethWallet == null || bscWallet == null || solWallet == null)
-            {
-                ViewBag.Error = "Cüzdan oluşturulamadı. Lütfen tekrar deneyin.";
-                return View("VerifyIndex");
-            }
-
-            // ✅ Kullanıcıya ait cüzdan kayıtlarını ekle
             var wallets = new List<UserWalletModel>
             {
-                new() { Address = tronWallet.Address, PrivateKey = tronWallet.PrivateKey, UserId = user.Id, TokenId = trxToken.Id, Network = "TRON", UpdatedAt = DateTime.UtcNow },
-                new() { Address = ethWallet.Address, PrivateKey = ethWallet.PrivateKey, UserId = user.Id, TokenId = ethToken.Id, Network = "ETH", UpdatedAt = DateTime.UtcNow },
-                new() { Address = bscWallet.Address, PrivateKey = bscWallet.PrivateKey, UserId = user.Id, TokenId = bscToken.Id, Network = "BSC", UpdatedAt = DateTime.UtcNow },
-                new() { Address = solWallet.Address, PrivateKey = solWallet.PrivateKey, UserId = user.Id, TokenId = solToken.Id, Network = "SOL", UpdatedAt = DateTime.UtcNow },
-                new() { Address = bttcwallet.Address, PrivateKey = bttcwallet.PrivateKey, UserId = user.Id, TokenId = bttcToken.Id, Network = "BTTC", UpdatedAt = DateTime.UtcNow }
+                new() { Address = _walletService.TronWallet.Address, PrivateKey = _walletService.TronWallet.PrivateKey, UserId = user.Id, TokenId = tokens.First(x=>x.Symbol=="TRX").Id, Network = "TRON", UpdatedAt = DateTime.UtcNow },
+                new() { Address = _walletService.EthWallet.Address, PrivateKey = _walletService.EthWallet.PrivateKey, UserId = user.Id, TokenId = tokens.First(x=>x.Symbol=="ETH").Id, Network = "ETH", UpdatedAt = DateTime.UtcNow },
+                new() { Address = _walletService.BscWallet.Address, PrivateKey = _walletService.BscWallet.PrivateKey, UserId = user.Id, TokenId = tokens.First(x=>x.Symbol=="BSC").Id, Network = "BSC", UpdatedAt = DateTime.UtcNow },
+                new() { Address = _walletService.SolWallet.Address, PrivateKey = _walletService.SolWallet.PrivateKey, UserId = user.Id, TokenId = tokens.First(x=>x.Symbol=="SOL").Id, Network = "SOL", UpdatedAt = DateTime.UtcNow },
+                new() { Address = _walletService.BttcWallet.Address, PrivateKey = _walletService.BttcWallet.PrivateKey, UserId = user.Id, TokenId = tokens.First(x=>x.Symbol=="BTT").Id, Network = "BTTC", UpdatedAt = DateTime.UtcNow }
             };
 
             await _appDbContext.UserWalletModels.AddRangeAsync(wallets);
@@ -228,6 +223,64 @@ namespace GlobalOrbitra.Controllers
 
             TempData["OtpVerified"] = true;
             return RedirectToAction("Login");
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPasswordPost(int userId, string NewPassword, string ConfirmPassword)
+        {
+            if (NewPassword != ConfirmPassword)
+            {
+                ModelState.AddModelError("", "Şifreler uyuşmuyor.");
+                ViewBag.UserId = userId;
+                return View("ResetPassword");
+            }
+
+            var user = await _appDbContext.UserModels.FindAsync(userId);
+            if (user == null)
+                return RedirectToAction("Login");
+
+            user.PasswordHash = NewPassword;
+            await _appDbContext.SaveChangesAsync();
+            await _gmailMailService.SendResetPassword(user.Email, "Şifreniz başarıyla sıfırlandı.");
+            return RedirectToAction("Login");
+        }
+
+
+        // POST: E-posta girildiğinde OTP gönder
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(UserModel model)
+        {
+            var user = await _appDbContext.UserModels.FirstOrDefaultAsync(u => u.Email == model.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError("Email", "Bu e-posta kayıtlı değil.");
+                return View();
+            }
+
+            var otp = OtpHelper.GenerateOtp();
+            var salt = OtpHelper.GenerateSalt();
+            var otpHash = OtpHelper.HashOtp(otp, salt);
+
+            _appDbContext.OtpCodes.Add(new OtpCodeModel
+            {
+                Email = user.Email,
+                OtpHash = otpHash,
+                Salt = salt,
+                Purpose = "forgot_password",
+                CreatedAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(10)
+            });
+
+            await _appDbContext.SaveChangesAsync();
+            await _gmailMailService.SendOtpAsync(user.Email, otp);
+
+            TempData["Email"] = user.Email;
+            TempData["UserId"] = user.Id;
+
+            return RedirectToAction("VerifyIndex");
         }
     }
 }

@@ -54,5 +54,21 @@ namespace GlobalOrbitra.Services.MailService
                 }
                 return true; 
         }
+        public async Task<bool> SendResetPassword(string toEmail, string otp)
+        {
+            var mail = new MailMessage();
+            mail.To.Add(toEmail);
+            mail.From = new MailAddress(_smtpUser);
+            mail.Subject = "Hesabınızın Şifresi Başarılı Şekilde Değiştirildi!";
+            mail.Body = $"Hesabınıza Giriş Yapıldı Eğer bu siz değilseniz, lütfen hesabınızı korumak için gerekli önlemleri alın";
+            mail.IsBodyHtml = false;
+            using (var smtp = new SmtpClient("smtp.gmail.com", 587))
+            {
+                smtp.Credentials = new NetworkCredential(_smtpUser, _smtpAppPassword);
+                smtp.EnableSsl = true;
+                await smtp.SendMailAsync(mail);
+            }
+            return true;
+        }
     }
 }

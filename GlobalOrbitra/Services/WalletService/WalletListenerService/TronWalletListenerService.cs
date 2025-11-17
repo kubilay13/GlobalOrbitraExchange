@@ -90,10 +90,6 @@ namespace GlobalOrbitra.Services.WalletService.WalletListenerService
         }
 
 
-
-
-
-
         public async Task CheckIncomingForUserAsync(UserWalletModel userWallet)
         {
             var txs = await GetIncomingTransactionsAsync(userWallet.Address);
@@ -376,6 +372,5 @@ namespace GlobalOrbitra.Services.WalletService.WalletListenerService
 
             return result;
         }
-
     }
 }

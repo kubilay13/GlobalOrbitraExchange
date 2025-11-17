@@ -63,9 +63,9 @@ namespace GlobalOrbitra.Db
                 //-------------------------------------------------
 
                 // ✅ ETH SEPOLIA TESTNET TOKENS EKLENDİ
-                new TokenModel { Id = 11, Name = "ETH (Sepolia)", Symbol = "ETH", ContractAddress = "0x0000000000000000000000000000000000000000", Decimal = 18, IsToken = false, ChainId = 6, IsActive = true, LogoUrl = "https://cryptologos.cc/logos/ethereum-eth-logo.png" },
-                new TokenModel { Id = 12, Name = "USDT (Sepolia)", Symbol = "USDT", ContractAddress = "0xaA8E23Fb1079EA71e0a56F48a2aA51851D8433D0", Decimal = 6, IsToken = true, ChainId = 6, IsActive = true, LogoUrl = "https://cryptologos.cc/logos/tether-usdt-logo.png" },
-                new TokenModel { Id = 13, Name = "USDC (Sepolia)", Symbol = "USDC", ContractAddress = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238", Decimal = 6, IsToken = true, ChainId = 6, IsActive = true, LogoUrl = "https://cryptologos.cc/logos/usd-coin-usdc-logo.png" },
+                new TokenModel { Id = 11, Name = "ETH (Sepolia)", Symbol = "ETH", ContractAddress = "0x0000000000000000000000000000000000000000", Decimal = 18, IsToken = false, ChainId = 7, IsActive = true, LogoUrl = "https://cryptologos.cc/logos/ethereum-eth-logo.png" },
+                new TokenModel { Id = 12, Name = "USDT (Sepolia)", Symbol = "USDT", ContractAddress = "0xaA8E23Fb1079EA71e0a56F48a2aA51851D8433D0", Decimal = 6, IsToken = true, ChainId = 7, IsActive = true, LogoUrl = "https://cryptologos.cc/logos/tether-usdt-logo.png" },
+                new TokenModel { Id = 13, Name = "USDC (Sepolia)", Symbol = "USDC", ContractAddress = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238", Decimal = 6, IsToken = true, ChainId = 7, IsActive = true, LogoUrl = "https://cryptologos.cc/logos/usd-coin-usdc-logo.png" },
                 //-------------------------------------------------
 
                 // ✅ BTT TESTNET TOKENS EKLENDİ
