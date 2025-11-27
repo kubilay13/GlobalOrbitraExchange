@@ -8,6 +8,8 @@ using GlobalOrbitra.Services.WalletService.WalletListenerService;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Authentication
 builder.Services.AddAuthentication("MyCookieAuth")
     .AddCookie("MyCookieAuth", options =>
     {
@@ -17,41 +19,57 @@ builder.Services.AddAuthentication("MyCookieAuth")
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Database
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Binance Services
 builder.Services.AddScoped<BinanceServices>();
 builder.Services.AddSingleton<BinanceSocketClient>();
 builder.Services.AddSingleton<BinanceRestClient>();
 
+// Wallet Services
 builder.Services.AddScoped<WalletService>();
 
+// ETH Wallet Services
 builder.Services.AddScoped<EthWalletListenerService>();
 builder.Services.AddHostedService<EthWalletBackgroundService>();
 
+// TRON Wallet Services
 builder.Services.AddScoped<TronWalletListenerService>();
 builder.Services.AddHostedService<TronWalletBackgroundService>();
 
-
+// Mail Service
 builder.Services.AddSingleton(new GlobalOrbitra.Services.MailService.GmailMailService(
     "akdogankubilay431@gmail.com", // Mail Address
-    "" // Mail App Password
+    "aqrj wiuc hkzv jdha" // Mail App Password
 ));
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+// SignalR
 builder.Services.AddSignalR();
 
 var app = builder.Build();
+
+// Binance Service baþlatma
 using (var scope = app.Services.CreateScope())
 {
-    var binanceService = scope.ServiceProvider.GetRequiredService<BinanceServices>();
-    await binanceService.SubscribeToPriceUpdatesAsync();
+    try
+    {
+        var binanceService = scope.ServiceProvider.GetRequiredService<BinanceServices>();
+        await binanceService.SubscribeToPriceUpdatesAsync();
+        Console.WriteLine("Binance service baþarýyla baþlatýldý.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Binance service baþlatma hatasý: {ex.Message}");
+    }
 }
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -66,6 +84,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// SignalR Hubs
 app.MapHub<PriceUpdateHub>("/priceUpdateHub");
 app.MapHub<PriceUpdateHub>("/priceUpdateFuturesAmount");
 

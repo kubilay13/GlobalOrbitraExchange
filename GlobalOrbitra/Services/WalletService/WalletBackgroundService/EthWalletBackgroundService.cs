@@ -1,10 +1,11 @@
 ﻿using GlobalOrbitra.Db;
 using GlobalOrbitra.Services.WalletService.WalletListenerService;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace GlobalOrbitra.Services.WalletService.WalletBackgroundService
 {
-    public class EthWalletBackgroundService:BackgroundService
+    public class EthWalletBackgroundService : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
 
@@ -20,24 +21,20 @@ namespace GlobalOrbitra.Services.WalletService.WalletBackgroundService
                 using (var scope = _scopeFactory.CreateScope())
                 {
                     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    var listener = new EthWalletListenerService(dbContext); 
+                    var listener = new EthWalletListenerService(dbContext);
 
-                    var wallets = await dbContext.UserWalletModels.ToListAsync();
-
-                    foreach (var wallet in wallets)
+                    try
                     {
-                        try
-                        {
-                            await listener.CheckIncomingForUserAsync(wallet);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"[Eth Background] Hata: {ex.Message}");
-                        }
+                        await listener.CheckAllEthWallets();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[BACKGROUND ERROR] {ex.Message}");
                     }
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken); // 10 saniyede bir kontrol
+                // 15 saniyede bir kontrol et
+                await Task.Delay(TimeSpan.FromSeconds(15), stoppingToken);
             }
         }
     }
